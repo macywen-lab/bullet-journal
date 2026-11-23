@@ -1,10 +1,10 @@
 # 我的子彈筆記
 
+**[開啟「我的子彈筆記」網頁 App](https://my-bullet-notebook.workspace-926599.chatgpt.site)**
+
+使用網站擁有者的 ChatGPT 帳號登入，即可跨裝置使用現有筆記。
+
 個人使用的網頁 App。手機底部可切換 Day、Week、Month、Year。各檢視共用同一份筆記資料，以台灣時間判定日期，週日為每週第一天。
-
-## 開啟網頁 App
-
-使用網站擁有者的 ChatGPT 帳號登入，即可跨裝置使用現有筆記。[開啟「我的子彈筆記」](https://my-bullet-notebook.workspace-926599.chatgpt.site)
 
 ## 發佈與更新
 
