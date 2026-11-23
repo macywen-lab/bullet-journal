@@ -1,8 +1,8 @@
 # 我的子彈筆記
 
-**[開啟「我的子彈筆記」網頁 App](https://my-bullet-notebook.workspace-926599.chatgpt.site)**
+**[開啟「我的子彈筆記」網頁 App](https://macywen-lab.github.io/bullet-journal/)**
 
-使用網站擁有者的 ChatGPT 帳號登入，即可跨裝置使用現有筆記。
+使用網站擁有者的 ChatGPT 帳號登入。從 GitHub Pages 點選「連線筆記」，在私人網站視窗允許此次連線後，回到 GitHub Pages 分頁使用現有筆記。保留連線視窗即可繼續同步。
 
 個人使用的網頁 App。手機底部可切換 Day、Week、Month、Year。各檢視共用同一份筆記資料，以台灣時間判定日期，週日為每週第一天。
 

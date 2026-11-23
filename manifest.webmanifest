@@ -1,0 +1,5 @@
+---
+layout: null
+---
+{% capture manifest %}{% include_relative web/pwa/manifest.webmanifest %}{% endcapture %}
+{{ manifest | replace: '"/"', '"./"' | replace: '"/pwa/', '"web/pwa/' }}

@@ -8,6 +8,8 @@ const phone = await readFile('worker/phone-calendar.js', 'utf8');
 const habits = await readFile('worker/habits.js', 'utf8');
 const apk = await readFile('android/release/phone-calendar-sync.apk', 'base64');
 const phoneCalendarScript = await readFile('web/phone-calendar.mjs', 'utf8');
+const githubBridgePage = await readFile('web/github-bridge.html', 'utf8');
+const githubBridgeScript = await readFile('web/github-bridge.js', 'utf8');
 const assetSources = {
   '/manifest.webmanifest': ['manifest.webmanifest', 'application/manifest+json; charset=utf-8'],
   '/service-worker.js': ['service-worker.js', 'text/javascript; charset=utf-8'],
@@ -26,5 +28,7 @@ await mkdir('dist/server', { recursive: true });
 await writeFile('dist/server/index.js',
   'const APP_ASSETS = ' + JSON.stringify(appAssets) + ';\n' +
   'const PAGE = ' + JSON.stringify(html) + ';\n' +
+  'const GITHUB_BRIDGE_PAGE = ' + JSON.stringify(githubBridgePage) + ';\n' +
+  'const GITHUB_BRIDGE_SCRIPT = ' + JSON.stringify(githubBridgeScript) + ';\n' +
   'const PHONE_CALENDAR_SCRIPT = ' + JSON.stringify(phoneCalendarScript) + ';\n' +
   'const PHONE_SYNC_APK = ' + JSON.stringify(apk) + ';\n' + phone + '\n' + photos + '\n' + habits + '\n' + recurring + '\n' + worker);

@@ -650,8 +650,9 @@ let lastSeenToday = taiwanToday();
 const state={view:'Day',settings:false,date:lastSeenToday,items:[],tag:'',search:'',busy:false,request:0,editing:null};
 function key(){return periodOf(state.date,state.view);}
 function toast(message){$('toast').textContent=message;$('toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').style.display='none',3300);}
+const journalRequest = globalThis.requestSyncedJournal ?? fetch;
 async function call(action, ...args) {
-  const response = await fetch('/api/entries', {
+  const response = await journalRequest('/api/entries', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action, args })
@@ -1496,16 +1497,50 @@ function photoUrl(entryId, photoId) {
   return '/api/note-photos/' + entryId + '/' + photoId;
 }
 
+function setPhotoSource(image, url) {
+  if (!globalThis.requestSyncedJournal || !url.startsWith('/api/note-photos/')) {
+    image.src = url;
+    return;
+  }
+  const controller = new AbortController();
+  image.pendingPhoto?.abort();
+  image.pendingPhoto = controller;
+  journalRequest(url, {signal: controller.signal}).then(async response => {
+    if (!response.ok) throw new Error('無法載入照片');
+    const photo = await response.blob();
+    if (controller.signal.aborted || !image.isConnected) return;
+    const objectUrl = URL.createObjectURL(photo);
+    const release = () => {
+      URL.revokeObjectURL(objectUrl);
+      image.removeEventListener('load', release);
+      image.removeEventListener('error', release);
+      controller.signal.removeEventListener('abort', release);
+    };
+    image.addEventListener('load', release);
+    image.addEventListener('error', release);
+    controller.signal.addEventListener('abort', release, {once: true});
+    image.src = objectUrl;
+  }).catch(() => {
+    if (!controller.signal.aborted) image.alt ||= '無法載入照片';
+  });
+}
+
 function previewPhoto(url, label) {
   const viewer = $('notePhotoViewer');
   const image = $('notePhotoFull');
   image.alt = label;
-  image.src = url;
+  image.pendingPhoto?.abort();
+  image.removeAttribute('src');
+  setPhotoSource(image, url);
   viewer.showModal();
 }
 
 $('closeNotePhoto').onclick = () => $('notePhotoViewer').close();
-$('notePhotoViewer').addEventListener('close', () => $('notePhotoFull').removeAttribute('src'));
+$('notePhotoViewer').addEventListener('close', () => {
+  const image = $('notePhotoFull');
+  image.pendingPhoto?.abort();
+  image.removeAttribute('src');
+});
 
 function photoThumbnail(thumb, full, number) {
   const button = el('button', 'note-photo-thumb');
@@ -1513,9 +1548,9 @@ function photoThumbnail(thumb, full, number) {
   const label = '放大第 ' + number + ' 張照片';
   button.setAttribute('aria-label', label);
   const image = el('img');
-  image.src = thumb;
   image.alt = '';
-  image.loading = 'lazy';
+  if (!globalThis.requestSyncedJournal) image.loading = 'lazy';
+  setPhotoSource(image, thumb);
   button.append(image);
   button.onclick = (event) => {
     event.stopPropagation();
@@ -1633,13 +1668,13 @@ async function preparePhotoDraft() {
 
 async function saveNotePhotos(entryId) {
   for (const id of photoDraft.removed) {
-    const response = await fetch(photoUrl(entryId, id), { method: 'DELETE' });
+    const response = await journalRequest(photoUrl(entryId, id), { method: 'DELETE' });
     if (!response.ok || response.redirected) throw new Error('無法移除照片，請再試一次');
   }
   photoDraft.removed = [];
   while (photoDraft.added.length) {
     const photo = photoDraft.added[0];
-    const response = await fetch(photoUrl(entryId, photo.id), { method: 'PUT', body: photo.body });
+    const response = await journalRequest(photoUrl(entryId, photo.id), { method: 'PUT', body: photo.body });
     if (!response.ok || response.redirected) throw new Error('照片上傳未完成，請再按一次儲存');
     photoDraft.added.shift();
     photoDraft.saved.push(photo.id);

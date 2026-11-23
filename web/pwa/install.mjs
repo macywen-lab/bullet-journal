@@ -58,7 +58,7 @@ launchMode.addEventListener('change', () => displayInstallStatus());
 displayInstallStatus();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js').catch(() => {
+  navigator.serviceWorker.register(new URL('service-worker.js', document.baseURI)).catch(() => {
     // Chrome's menu remains available when service-worker registration fails.
   });
 }

@@ -286,6 +286,15 @@ const noCache = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosnif
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (request.method === 'GET' && ['/github-bridge', '/github-bridge.js'].includes(url.pathname)) {
+      if (!request.headers.get('oai-authenticated-user-id')) return new Response(null, { status: 401, headers: noCache });
+      const page = url.pathname === '/github-bridge';
+      return new Response(page ? GITHUB_BRIDGE_PAGE : GITHUB_BRIDGE_SCRIPT, { headers: {
+        ...noCache,
+        'Content-Type': page ? 'text/html; charset=utf-8' : 'text/javascript; charset=utf-8',
+        'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; form-action 'none'; base-uri 'none'"
+      } });
+    }
     if (url.pathname === '/' && request.method === 'GET') {
       return new Response(PAGE, { headers: { ...noCache, 'Content-Type': 'text/html; charset=utf-8',
         'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' 'self'; connect-src 'self' blob: data:; img-src 'self' blob: data:; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'" } });

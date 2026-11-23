@@ -1,0 +1,5 @@
+---
+layout: null
+---
+{% capture journal %}{% include_relative web/index.html %}{% endcapture %}
+{{ journal | replace: '<body>', '<body><script src="web/github-connection.js"></script>' | replace: 'href="/manifest.webmanifest" crossorigin="use-credentials"', 'href="manifest.webmanifest"' | replace: 'href="/pwa/', 'href="web/pwa/' | replace: 'href="/downloads/phone-calendar-sync.apk"', 'href="android/release/phone-calendar-sync.apk"' | replace: 'src="/phone-calendar.mjs"', 'src="web/phone-calendar.mjs"' | replace: 'src="/pwa/install.mjs"', 'src="web/pwa/install.mjs"' }}
