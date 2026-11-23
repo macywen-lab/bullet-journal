@@ -1,0 +1,25 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="tw.notes.phonesync"
+  android:versionCode="6" android:versionName="1.5">
+  <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
+  <uses-permission android:name="android.permission.READ_CALENDAR" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <application android:label="子彈筆記手機同步" android:allowBackup="false" android:usesCleartextTraffic="false"
+    android:theme="@android:style/Theme.Material.Light.NoActionBar">
+    <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="bujo-phone-sync" android:host="calendar" android:path="/add-account" />
+        <data android:scheme="bujo-phone-sync" android:host="calendar" android:path="/select" />
+      </intent-filter>
+    </activity>
+    <service android:name=".CalendarJob" android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true" />
+  </application>
+</manifest>

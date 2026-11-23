@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>我的子彈筆記</title>
+<meta name="theme-color" content="#164d49">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+<link rel="icon" type="image/png" sizes="48x48" href="/pwa/icon-48.png?v=notebook-512-v2">
+<link rel="apple-touch-icon" sizes="192x192" href="/pwa/icon-192.png?v=notebook-512-v2">
+<style>
+:root{--bg:#fafafa;--side:#f4f4f4;--ink:#292929;--muted:#888;--line:#e3e3e3;--accent:#363636;--soft:#ededed;--teal:#13818b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);font-size:14px}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:default}
+.shell{min-height:100vh;display:flex}.sidebar{width:215px;flex:none;background:var(--side);box-shadow:5px 0 18px #00000005;padding:16px 11px;position:sticky;top:0;height:100vh}.side-title{font-size:11px;letter-spacing:1.5px;color:#777;margin:1px 5px 9px}.segmented{display:flex;background:#ededed;border-radius:16px;padding:3px;gap:1px}.segmented button{flex:1;min-width:0;border:0;background:none;padding:9px 5px;border-radius:12px;font-size:11px;color:#666}.segmented button.active{background:#373737;color:#fff;font-weight:700}.tag-area{margin-top:24px}.tag-list{display:flex;gap:6px;flex-wrap:wrap}.tag-pill{border:0;background:#e3f1f0;color:#27777a;border-radius:7px;padding:4px 7px;font-size:11px}.tag-pill:nth-child(4n+1){background:#ece7f6;color:#68559a}.tag-pill:nth-child(4n+2){background:#f5e9e6;color:#846459}.tag-pill:nth-child(4n+3){background:#f0f3df;color:#647437}.tag-pill.on{outline:2px solid currentColor}.tag-tip{color:#aaa;font-size:11px;line-height:1.6;margin:9px 4px}
+.main{flex:1;min-width:0;padding:25px clamp(20px,5vw,90px) 60px}.container{max-width:890px;margin:0 auto}.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.overline{font-size:11px;color:#777;letter-spacing:.8px}.navdates{display:flex;align-items:center;gap:7px}.icon-btn,.plain-btn{border:1px solid #e5e5e5;background:white;border-radius:9px;padding:9px 12px;color:#444}.icon-btn:hover,.plain-btn:hover{background:#f1f1f1}.hero{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:4px 0 25px}.hero h1{font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-1px;margin:0}.range{color:#858585;font-size:12px;margin-top:7px}.add-main{border:0;border-radius:50%;height:43px;width:43px;background:#353535;color:#fff;font-size:29px;line-height:1;flex:none}.add-main:hover{background:#000}
+.days{min-width:0}.day-row{display:grid;grid-template-columns:54px minmax(0,1fr) 30px;align-items:center;min-height:76px;border-bottom:1px solid #dcdcdc;gap:9px;padding:9px 0}.day-row:last-child{border-bottom:none}.daydate{border:0;background:none;border-radius:13px;min-width:48px;height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#555}.daydate.today{background:#ffedb8}.daydate span{font-size:13px}.daydate strong{font-size:17px;font-weight:400}.day-content{min-width:0}.day-entry{display:flex;align-items:flex-start;gap:9px;padding:5px 0;cursor:pointer;line-height:1.5}.day-entry:hover .entry-title{text-decoration:underline}.dot{color:#363636;min-width:15px;font-size:15px;line-height:1.4}.dot.event{font-size:19px;line-height:1.1}.dot.note{color:#888}.dot.done{color:#999}.dot.priority{color:#ed4444}.entry-title{overflow-wrap:anywhere;white-space:pre-wrap}.entry-sub{font-size:11px;color:#999;margin-top:2px}.entry-sub .hash{color:var(--teal)}.row-add{border:0;background:none;font-size:22px;color:#aaa;border-radius:6px;min-width:28px}.row-add:hover{background:#eaeaea;color:#333}.calendar-icon{font-size:31px;margin:7px 0 18px}.empty-label{line-height:1.8;font-size:13px}.allweek .day-entry{border-bottom:1px solid #e7e7e7;padding:12px 0;text-align:left}.allweek-add{border:0;color:#666;background:none;font-size:13px;margin-top:15px;padding:9px}.allweek-add:hover{color:#111}
+.list-header{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding-bottom:12px}.list-header h2{font-weight:500;font-size:18px;margin:0}.record{display:flex;align-items:flex-start;gap:12px;padding:18px 3px;border-bottom:1px solid var(--line)}.record .record-body{flex:1;cursor:pointer;min-width:0}.record-title{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.55}.record-meta{font-size:11px;color:#999;margin-top:5px}.empty-records{color:#999;text-align:center;padding:50px 10px}.summary{font-size:12px;color:#888;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}.search{margin-left:auto;min-width:140px;max-width:220px;border:1px solid var(--line);padding:8px 10px;border-radius:8px;background:white}.legend{margin-top:28px;font-size:11px;line-height:1.9;color:#aaa}
+.overlay{position:fixed;inset:0;background:#1117;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}.overlay.show{display:flex}.modal{background:#fff;border-radius:18px;width:min(100%,510px);max-height:94vh;overflow:auto;box-shadow:0 20px 60px #0003;padding:25px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.modal-head h2{margin:0;font-size:21px;font-weight:500}.close{border:0;background:none;font-size:27px;color:#777}.field{margin-top:18px}.field label{display:block;font-size:12px;color:#666;margin-bottom:8px}.field select,.field input:not([type=checkbox]),.field textarea{width:100%;background:#fafafa;border:1px solid #ddd;border-radius:10px;padding:12px;outline-color:#888}.field textarea{height:125px;resize:vertical;line-height:1.6}.row-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.check{display:flex;align-items:center;gap:7px;margin-top:16px;font-size:13px}.modal-foot{margin-top:25px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.primary{background:#353535!important;color:#fff!important;border:0!important;border-radius:9px;padding:11px 17px}.secondary{background:#f0f0f0;border:0;border-radius:9px;padding:11px 17px}.danger{background:#fff3f3;color:#ba3030;border:0;border-radius:9px;padding:11px 13px;margin-right:auto}.toast{position:fixed;right:22px;bottom:22px;background:#333;color:white;padding:13px 17px;border-radius:10px;box-shadow:0 8px 25px #0002;display:none;z-index:30;max-width:90vw}
+@media(max-width:800px){.sidebar{width:100%;height:auto;position:static;box-shadow:none;padding:13px}.shell{display:block}.side-title{margin:0 5px 5px}.tag-area{margin-top:9px}.tag-tip{display:none}.main{padding:24px 16px 45px}.hero{margin-bottom:16px}.day-row{grid-template-columns:49px minmax(0,1fr) 26px}.record{flex-wrap:wrap}}
+
+/* Day：同 Week 採加號開啟表單，依 Task / Event / Note 分類。 */
+.day-view{max-width:880px}.day-intro{display:flex;align-items:center;gap:17px;padding:8px 2px 25px;border-bottom:1px solid var(--line);flex-wrap:wrap}.day-large-number{font-size:64px;font-weight:300;line-height:1}.day-date-description{flex:1;min-width:100px}.day-weekday{font-size:21px}.day-month{font-size:12px;color:var(--muted);margin-top:6px}.day-main-add{background:#383838;color:#fff;border:0;border-radius:50px;padding:12px 17px}.day-main-add:hover{background:#151515}.day-section{padding-top:22px}.day-section-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:9px}.day-section-head h2{font-weight:500;font-size:13px;letter-spacing:1px;margin:0}.day-section-plus{font-size:22px}.day-section .record:last-child{border-bottom:none}
+@media(max-width:700px){.day-intro{gap:11px}.day-large-number{font-size:50px}.day-main-add{width:100%}}
+
+.type-tabs{display:flex;gap:4px;padding:4px;background:#f1f1f1;border-radius:12px}
+.type-tabs button{border:0;border-radius:9px;background:transparent;flex:1;padding:11px 5px;font-size:13px;color:#666}
+.type-tabs button.selected{background:#fff;color:#222;font-weight:700;box-shadow:0 2px 6px #0001}
+.tag-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag-choice{border:1px solid #e4e4e4;border-radius:16px;background:#fafafa;padding:5px 10px;font-size:12px;color:#555}
+.tag-choice:hover{background:#e9f1ef}
+.hint{font-size:11px;color:#999;margin-top:8px;line-height:1.5}
+.entry-title,.record-title{white-space:pre-wrap;overflow-wrap:anywhere}
+.entry-description,.record-description{font-size:12px;color:#777;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:4px;line-height:1.5}
+@media(max-width:560px){.modal{padding:18px}.row-fields{grid-template-columns:1fr}}
+/* Month / Year 時間軸：參考極簡手帳版型 */
+.month-timeline,.year-timeline{width:100%;max-width:850px}
+.timeline-date-row{display:grid;grid-template-columns:35px 27px minmax(0,1fr) 24px;gap:4px;align-items:start;min-height:35px;padding:7px 8px;border-radius:14px}
+.timeline-date-row.is-today{background:var(--today-bg)}
+.timeline-date-row.week-end{border-bottom:1px solid var(--line);border-radius:0;margin-bottom:9px;padding-bottom:12px}
+.timeline-date-number{font-size:14px;line-height:23px;color:#444;text-align:left}
+.timeline-weekday{font-size:11px;line-height:23px;color:#555}
+.timeline-entries{display:flex;flex-direction:column;gap:4px;min-width:0}
+.timeline-entry{display:inline-flex;gap:7px;align-items:flex-start;min-width:0;max-width:100%;background:none;border:0;color:var(--ink);text-align:left;padding:1px 0;line-height:21px;font-size:13px}
+.timeline-entry:hover .timeline-entry-name{text-decoration:underline}
+.timeline-migration-content{min-width:0;overflow-wrap:anywhere}
+.timeline-entry-name{overflow-wrap:anywhere;white-space:pre-wrap}
+.timeline-entry .timeline-dot{font-size:13px;color:#333;min-width:12px}
+.timeline-entry .timeline-dot.urgent{color:#e53935}
+.timeline-add{border:0;background:none;color:#aaa;font-size:17px;opacity:0;line-height:23px}
+.timeline-date-row:hover .timeline-add,.timeline-add:focus{opacity:1}
+.year-month{min-width:0}
+.year-month+.year-month{border-top:1px solid var(--line);margin-top:9px;padding-top:9px}
+.year-month-title{margin:0;padding:4px 8px 5px;letter-spacing:1px;font-size:.875rem;color:var(--muted)}
+
+@media(max-width:700px){.timeline-date-row{grid-template-columns:28px 20px minmax(0,1fr) 26px;padding-left:1px;padding-right:1px}.timeline-entries{gap:2px}.timeline-entry{font-size:12px}.timeline-add{opacity:1}}
+/* 逾期任務：紅點會永久保留；V 是完成狀態 */
+.task-toggle {border:0;background:transparent;padding:0 3px;min-width:19px;
+  font-size:17px;line-height:1.4;color:#383838;font-weight:600;cursor:pointer;}
+.task-toggle:hover {background:#eee;border-radius:4px;}
+.task-toggle.late {color:#e53935;}
+.overdue-dot {display:inline-block;color:#e53935;font-size:16px;line-height:1.3;
+  padding-right:3px;vertical-align:middle;}
+.timeline-task-toggle {border:0;background:transparent;padding:0;
+  font-size:14px;min-width:14px;cursor:pointer;color:#333;}
+.timeline-task-toggle.late {color:#e53935;}
+
+/* Day / Week 每筆 Task、Note 的省略號功能選單 */
+.entry-menu-wrap{position:relative;flex:none;align-self:flex-start;margin-left:auto}
+.entry-menu-trigger{border:0;background:transparent;border-radius:9px;color:#777;
+  font-size:21px;min-width:32px;min-height:32px;line-height:1;padding:4px 8px}
+.entry-menu-trigger:hover,.entry-menu-trigger[aria-expanded="true"]{background:#eeeeee;color:#222}
+.entry-menu-popup{position:fixed;z-index:17;min-width:150px;max-width:calc(100vw - 16px);overflow:auto;overscroll-behavior:contain;
+  background:#fff;box-shadow:0 5px 22px #0002;border:1px solid #eee;
+  border-radius:12px;padding:5px;display:flex;flex-direction:column}
+.entry-menu-popup button{flex:none;background:transparent;border:0;text-align:left;padding:11px 12px;
+  border-radius:8px;color:#333;white-space:nowrap;font-size:13px}
+.entry-menu-popup button:hover{background:#f3f3f3}
+.entry-menu-popup button.danger-option{color:#b03434}
+.entry-menu-popup button:disabled{color:#aaa;opacity:.65}
+.day-entry .entry-menu-wrap{margin-left:8px}
+.day-entry{overflow:visible}
+.record .entry-menu-wrap{margin-left:auto}
+.migrate-overlay{z-index:35}
+.migrate-dialog{background:white;border-radius:16px;padding:24px;width:min(95vw,390px);
+ box-shadow:0 16px 40px #0003}
+.migrate-dialog h2{font-size:19px;font-weight:500;margin:0 0 12px}
+.migrate-dialog label{display:block;margin:14px 0 7px;color:#666;font-size:12px}
+.migrate-dialog input{width:100%;padding:11px;border-radius:9px;border:1px solid #ddd}
+.migrate-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+
+:root{--bg:#f8faf9;--today-bg:#fff9e7;--side:#edf4f1;--ink:#192c29;--muted:#526660;--line:#d9e5df;--accent:#164d49;--soft:#e3ede8;--teal:#15736b}
+body{font-size:16px}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #15736b;outline-offset:2px}
+.hero h1,h1{color:#183f3a;font-family:Georgia,"Noto Serif TC",serif;font-weight:normal}
+.segmented button.active{background:#164d49;color:white}
+.navdates .icon-btn{min-width:44px;min-height:44px;padding:0;font-size:18px}
+.day-section h2,.record-title,.entry-title,.timeline-entry{font-size:1rem}
+.record-meta,.entry-description,.record-description,.entry-sub,.legend{color:#526660;font-size:.8125rem}
+.timeline-entry-name{border:0;background:transparent;color:inherit;text-align:left;padding:0;line-height:inherit;font:inherit}
+.record.completed :is(.record-title,.record-description),
+.day-entry.completed :is(.entry-title,.entry-description),
+.timeline-entry.is-done .timeline-entry-name{
+  color:#526660;text-decoration-line:line-through;
+}
+.overdue-open :is(.record-title,.record-description,.record-meta,.entry-title,.entry-description,.entry-sub,.timeline-entry-name){
+  color:#a72831;
+}
+.timeline-add{opacity:1}
+@media(max-width:800px){
+  .sidebar{height:auto;min-height:0;padding:10px 16px;background:var(--side)}
+  .sidebar>.side-title{display:none}
+  .sidebar .tag-area{margin:0}
+  #nav{position:fixed;z-index:15;bottom:0;left:0;right:0;border-radius:0;
+    background:#f9fcfa;border-top:1px solid #d5e2dc;
+    padding:8px max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));gap:6px}
+  #nav button{min-height:46px;font-size:.9375rem;border-radius:11px}
+  .main{padding:22px 16px calc(84px + env(safe-area-inset-bottom))}
+  .toast{bottom:calc(76px + env(safe-area-inset-bottom));max-width:calc(100% - 32px)}
+  .modal{max-height:90dvh}
+  .row-add,.entry-menu-trigger{min-height:36px}
+  .modal input,.modal select,.modal textarea,.migrate-dialog input{font-size:16px}
+}
+
+
+#nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+#nav button{min-height:40px;font-size:.875rem}
+#settingsTab{grid-column:1 / -1}
+.settings-heading{font-size:2rem;margin:0 0 20px}
+.settings-card{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.settings-card h2{margin:0 0 8px;font-size:1rem}
+.settings-context,.tag-tip{color:var(--muted);font-size:.875rem}
+.settings-context{margin:0 0 12px}
+.report-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.report-day{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+.report-day.today{border-color:var(--teal);background:var(--side)}
+.report-day-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.report-day h2{font-size:.9375rem;margin:0;font-variant-numeric:tabular-nums}
+.report-day-copy{min-height:36px;font-size:.8125rem;white-space:nowrap;padding:4px 9px}
+.report-day p{font-size:.875rem;color:var(--muted);margin:0}
+.report-day ul{margin:0;padding:0;list-style:none}
+.report-day li{padding:3px 0;line-height:1.5;overflow-wrap:anywhere}
+.report-description{display:block;color:var(--muted);font-size:.875rem;white-space:pre-wrap}
+#reportCopyFallback{width:100%;min-height:15rem;padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:12px}
+.tag-pill{min-height:36px;font-size:.875rem;padding:4px 10px}
+.active-tag{border:1px solid var(--line);background:var(--side);color:var(--accent);border-radius:8px;padding:4px 8px}
+.summary{color:var(--muted);font-size:.8125rem;margin-bottom:14px;gap:8px}
+.range{color:var(--muted);font-size:.875rem}
+.hero{margin-bottom:14px}
+.day-view{display:grid;gap:12px}
+.day-section{padding:0 12px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.day-section-head{padding-bottom:0;min-height:42px}
+.day-section-head h2{font-weight:650;letter-spacing:.025em}
+.day-section .record{padding:9px 1px;gap:8px}
+
+.day-row{min-height:56px;padding:4px 0;align-items:start}
+.daydate{height:46px;gap:2px}
+
+.phone-event-details{flex:1;min-width:0;font-size:.9375rem}
+.phone-event-details summary{cursor:pointer;line-height:1.45;padding:2px 0;min-height:28px;overflow-wrap:anywhere}
+.phone-event-details summary::marker{color:var(--teal)}
+.phone-event-time{color:var(--muted);font-variant-numeric:tabular-nums;margin-right:8px}
+.phone-event-meta{padding:4px 0 2px 13px;line-height:1.5}
+@media(max-width:800px){
+  .sidebar{padding:0}
+  #nav{grid-template-columns:repeat(5,minmax(0,1fr))}
+  #nav button{min-height:46px;font-size:.875rem}
+  #settingsTab{grid-column:auto}
+  .main{padding-top:16px}
+  .search{font-size:16px;min-width:0;width:min(48%,220px)}
+}
+dialog.calendar-settings{width:min(560px,calc(100% - 28px));max-height:90dvh;overflow:auto;border:1px solid var(--line);
+  border-radius:16px;padding:20px 18px;color:var(--ink);background:#fff}
+dialog.calendar-settings::backdrop{background:#15262188}
+#phoneCalendarStatus{font-size:.875rem;line-height:1.6;margin:12px 0}
+.phone-calendar-controls{display:flex;flex-wrap:wrap;gap:8px}
+.phone-calendar-accounts{margin:12px 0}
+.phone-calendar-accounts details{border-top:1px solid var(--line);padding:8px 0}
+.phone-calendar-accounts summary,#phoneCalendarPairing summary{cursor:pointer}
+.phone-calendar-accounts summary{font-weight:600;overflow-wrap:anywhere}
+.phone-calendar-accounts ul{margin:7px 0;padding-inline-start:26px}
+.phone-calendar-accounts li{overflow-wrap:anywhere}
+.phone-calendar-hint{font-size:.875rem;line-height:1.5;color:var(--muted)}
+#phoneCalendarPairing{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+#phoneCalendarPairing .phone-calendar-controls{margin-top:8px}
+#phoneCalendarSecret{width:100%;margin:8px 0}
+.phone-calendar-download{display:inline-block;margin:6px 0;color:#164d49;font-weight:600}
+.note-photos{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.note-photo-thumb{width:66px;height:54px;padding:0;overflow:hidden;border:1px solid var(--line);
+  border-radius:7px;background:var(--soft);display:block}
+.note-photo-thumb img{width:100%;height:100%;object-fit:contain;display:block}
+.note-photo-draft{display:flex;flex-direction:column;align-items:center;gap:2px}
+.note-photo-remove{border:0;background:transparent;color:#a72831;padding:3px 4px;font-size:.8125rem}
+.period-card{border:1px solid #c49282;border-radius:13px;background:#fffef8;padding:0 12px;margin-bottom:8px}
+.period-card h2{font-size:.875rem;letter-spacing:.06em;color:#74453a;margin:0;padding:8px 0;border-bottom:1px solid #edd9d2}
+.period-card .record{padding:6px 0;gap:8px}
+.period-card .record:last-child{border-bottom:0}
+.day-row.is-empty{min-height:36px;padding-block:0}
+.day-row.is-empty .daydate{height:36px;gap:0}
+.day-row.is-empty .daydate strong{font-size:1rem}
+.day-view{gap:8px}
+.day-section.is-empty .day-section-head{min-height:36px;border-bottom:0}
+.timeline-date-row.is-empty{padding-block:1px;min-height:34px}
+.timeline-date-row.week-end.is-empty{margin-bottom:4px}
+.timeline-add{min-width:26px;min-height:32px}
+/* Compact journal editor */
+.editor-modal{display:flex;flex-direction:column;padding:0;max-height:calc(100dvh - 32px);overflow:hidden}
+.editor-body{overflow:auto;overscroll-behavior:contain;padding:14px 18px 4px}
+.editor-title-row{display:flex;align-items:center;gap:8px}
+.editor-title-row input,.editor-description{color:var(--ink);border:0;background:transparent;min-width:0;width:100%;padding:6px 3px}
+.editor-title-row input{flex:1;font-size:clamp(1.35rem,5vw,1.7rem);font-weight:650}
+.editor-description{display:block;min-height:62px;max-height:25dvh;resize:vertical;margin:3px 0 9px;line-height:1.45}
+.editor-title-row input:focus-visible,.editor-description:focus-visible{outline-offset:-1px;border-radius:6px}
+.editor-close{min-width:38px;min-height:38px;line-height:1}
+.editor-modal .type-tabs{border-radius:14px}
+.editor-modal .type-tabs button{min-height:38px;padding-block:7px;font-size:.875rem}
+.editor-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin:8px 0}
+.editor-tool{border:1px solid transparent;border-radius:9px;background:transparent;color:var(--muted);
+  min-height:40px;min-width:39px;padding:3px 7px;font-size:1.125rem}
+.editor-tool:hover,.editor-tool[aria-expanded="true"],.editor-tool[aria-pressed="true"]{
+  background:var(--side);color:var(--accent);border-color:var(--line)}
+.editor-icon-pair{display:flex;gap:4px}
+.editor-icon-tool{min-width:44px;min-height:44px;padding:6px}
+.editor-icon-tool svg{display:block;width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#editorImportant[aria-pressed="true"] svg{fill:currentColor}
+.editor-date-tool{display:inline-flex;align-items:center;gap:6px;text-align:left;font-size:.875rem;font-weight:600}
+.editor-date-tool span:first-child{font-size:1.15rem}
+.editor-panel{margin:0 0 8px;padding:8px 10px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+.editor-panel .field{margin:0}
+.editor-panel .field input{background:white}
+.editor-panel .tag-suggestions{margin-top:7px}
+#editorRepeat:not([hidden]){font-size:.875rem;gap:5px;display:inline-flex;align-items:center}
+#editorRepeat svg{width:19px;height:19px}
+#editorRepeatPanel .field+.field{margin-top:8px}
+#deleteRepeatDialog .delete-repeat-actions{display:grid;gap:8px;margin-top:14px}
+#deleteRepeatDialog .danger{margin:0}
+.editor-foot{margin:0;padding:8px 18px 12px;background:white;border-top:1px solid var(--line)}
+.editor-foot .primary{background:var(--accent)!important}
+.editor-sr-only{position:absolute;overflow:hidden;clip-path:inset(50%);width:1px;height:1px;white-space:nowrap}
+@media(max-width:560px){
+  #overlay{padding:0;align-items:flex-end}
+  .editor-modal{width:100%;max-height:calc(100dvh - max(16px,env(safe-area-inset-top)));border-radius:20px 20px 0 0}
+  .editor-foot{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+}
+.period-picker{width:min(100% - 24px,414px);max-height:calc(100dvh - 24px);overflow:auto;
+  color:var(--ink);background:#fcfdfb;border:1px solid var(--line);border-radius:20px;padding:14px 16px;
+  box-shadow:0 16px 40px #163d322e}
+.period-picker::backdrop{background:#182e2977}
+.period-picker h2{font-size:1rem;letter-spacing:.06em;margin:0 0 8px;color:var(--accent)}
+.period-picker-nav{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:6px;text-align:center}
+.period-picker-nav button{min-height:38px;padding:0}
+.period-picker-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:12px}
+.period-picker-grid.is-week{grid-template-columns:1fr;gap:3px}
+.period-week-row{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));align-items:center;text-align:center}
+.period-week-heading{font-size:.8125rem;color:var(--muted);padding-block:4px}
+.period-choice{border:1px solid transparent;border-radius:9px;padding:0;background:transparent;color:var(--ink);
+  min-height:48px;font-variant-numeric:tabular-nums}
+.period-choice:hover{background:var(--side)}
+.period-choice[aria-pressed="true"]{background:var(--accent);color:white}
+.period-choice.period-week-row{width:100%;min-height:37px}
+.period-choice .outside-month{opacity:.62}
+.period-picker-foot{display:flex;justify-content:flex-end;gap:8px;padding-top:12px}
+.period-picker-foot .primary{background:var(--accent)!important}
+.note-photo-marker{margin-inline-start:5px;font-size:.8125rem;white-space:nowrap}
+#notePhotoViewer{width:min(92vw,910px);max-height:92dvh;padding:10px;border:0;border-radius:12px;background:#192c29;color:#fff}
+#notePhotoViewer::backdrop{background:#111c}
+#notePhotoViewer button{display:block;margin:0 0 8px auto}
+#notePhotoFull{display:block;width:100%;max-height:78dvh;object-fit:contain}
+/* Keep period controls accessible as the log scrolls. */
+.main{padding-top:0}
+.frozen-header{
+  position:sticky;top:0;z-index:13;background:var(--bg);
+  padding:8px 0;border-bottom:1px solid var(--line);margin-bottom:10px;
+}
+.journal-header .topline{gap:6px}
+.journal-header .navdates{gap:5px}
+.journal-header .icon-btn,
+.journal-header .navdates .plain-btn{min-height:40px}
+.journal-header .icon-btn{min-width:40px}
+.journal-header .navdates .plain-btn{padding:0 10px}
+.journal-header .hero{gap:6px;margin:3px 0 5px}
+.journal-header .period-heading{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+.journal-header .hero h1{font-size:clamp(1.5rem,3vw,1.875rem);line-height:1.15}
+.journal-header .range{font-size:.8125rem;margin:0;font-variant-numeric:tabular-nums}
+.journal-header .add-main{width:36px;height:36px;font-size:24px}
+.journal-header .summary{margin:0;gap:5px 8px}
+.journal-header .search{padding:5px 8px;min-height:34px}
+.journal-header .active-tag{flex-basis:auto;max-width:100%;overflow-wrap:anywhere}
+.journal-header .active-tag-row{flex-basis:100%}
+.frozen-header .settings-heading{font-size:1.5rem;margin:0}
+.report-header .report-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px}
+.report-header .settings-context{margin:0;font-size:.8125rem}
+.report-header .report-toolbar{margin:5px 0 0}
+.report-header .report-toolbar button{min-height:36px;padding:5px 10px}
+#reportStatus:not(:empty){margin-top:4px}
+@media(max-width:800px){
+  .journal-header .search{max-width:48%}
+}
+.water-card{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:9px;overflow:hidden}
+.water-head{display:flex;align-items:center;gap:6px;padding:4px 9px}
+.water-summary-button{display:flex;align-items:center;justify-content:flex-start;gap:8px;flex:1;min-width:0;min-height:42px;
+  border:0;background:none;border-radius:8px;text-align:left;color:var(--accent);padding:4px 6px}
+.water-summary-copy{flex:1;min-width:0}
+.water-name{display:block;font-weight:700;font-size:.9rem}
+.water-sub,.water-help{font-size:.8125rem;color:var(--muted);line-height:1.4}
+.water-drop{display:inline-block;width:12px;height:12px;flex:none;background:#408d83;border-radius:8px 8px 8px 2px;transform:rotate(-45deg);margin:4px}
+.water-chevron{font-size:1rem;color:var(--muted);transition:transform .15s ease}
+.water-summary-button[aria-expanded="true"] .water-chevron{transform:rotate(180deg)}
+.water-log{background:var(--accent);border:0;border-radius:9px;color:white;min-height:40px;padding:5px 10px;font-size:.875rem;white-space:nowrap}
+.water-log:disabled{opacity:.5}
+.water-body{border-top:1px solid var(--line);padding:10px 14px 12px}
+.water-progress{width:100%;height:10px;display:block;accent-color:var(--teal);margin:5px 0 8px}
+.water-actions{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px}
+.water-actions button,.water-form button{min-height:34px;padding:5px 9px;font-size:.8125rem}
+.water-form{margin-top:9px;background:var(--bg);border-radius:10px;padding:9px}
+.water-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.water-fields label{font-size:.8125rem;color:var(--muted)}
+.water-fields input{width:100%;margin-top:3px;padding:6px;border:1px solid var(--line);border-radius:8px;font-size:1rem}
+.water-history{list-style:none;padding:0;margin:0}
+.water-history li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:5px 10px;font-size:.8125rem;
+  font-variant-numeric:tabular-nums;padding:5px 0;border-bottom:1px solid var(--line)}
+.water-history li:last-child{border-bottom:0}
+.water-history li span:nth-child(2){text-align:right;color:var(--muted)}
+.water-met{color:var(--accent);font-weight:700}
+.water-unmet{color:#715629}
+.water-empty{color:var(--muted)}
+#habitsView:not([hidden]){margin-top:12px}
+.water-name{overflow-wrap:anywhere}
+.water-fields select{width:100%;margin-top:3px;padding:6px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff}
+.habit-full-field{grid-column:1/-1}
+.habit-setting-group{border:1px solid var(--line);border-radius:10px;margin-top:8px}
+.habit-setting-summary{padding:9px 10px;cursor:pointer;color:var(--accent);overflow-wrap:anywhere}
+.habit-setting-name{font-size:.875rem;font-weight:700}
+.habit-setting-status{display:block;color:var(--muted);font-size:.75rem;margin-top:2px}
+.habit-setting-group-content{padding:0 9px 9px}
+.habit-setting-item{border-top:1px solid var(--line);padding:0 0 6px}
+.habit-setting-item:last-child{padding-bottom:0}
+.habit-setting-item .water-form{margin-top:0}
+.habit-setting-controls{justify-content:flex-end}
+.habit-setting-controls .habit-delete{color:#a32d2d}
+#settingsTab{padding-inline:2px}
+#dailyReflection:not([hidden]){max-width:880px;margin-top:8px}
+.reflection-summary{cursor:pointer;padding:8px 0;line-height:22px}
+.reflection-summary::marker{color:var(--teal)}
+.reflection-summary h2{display:inline;margin:0 0 0 4px;font-weight:650;letter-spacing:.025em}
+#reflectionEditor[open] .reflection-summary{border-bottom:1px solid var(--line)}
+#reflectionEditor[open]+.reflection-list{display:none}
+.reflection-list{margin:0;padding:0 0 8px 16px;color:var(--muted);font-size:.875rem;line-height:1.45}
+.reflection-list li+li{margin-top:2px}
+.reflection-preview{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reflection-preview strong{color:var(--ink);font-weight:600}
+.reflection-fields{min-width:0;margin:0;padding:12px 0;border:0}
+.reflection-fields .field{margin:0 0 10px}
+.reflection-fields .field label{margin-bottom:5px;color:var(--ink);font-size:.875rem;font-weight:600}
+.reflection-fields .field textarea{height:auto;min-height:55px;padding:7px 9px;font:inherit}
+.reflection-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding-bottom:10px}
+.reflection-status{font-size:.8125rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-title">TIMELINE</div>
+    <div class="segmented" id="nav" role="group" aria-label="時間檢視">
+      <button data-view="Day" class="active">Day</button><button data-view="Week">Week</button><button data-view="Month">Month</button><button data-view="Year">Year</button><button id="settingsTab" type="button" aria-controls="settingsPage" aria-pressed="false">Settings</button>
+    </div>
+  </aside>
+  <main class="main"><div id="journalPage" class="container">
+    <header class="frozen-header journal-header">
+      <div class="topline"><div id="overline" class="overline">DAILY LOG</div><div class="navdates"><button id="prev" class="icon-btn" title="上一期" aria-label="上一期">&lt;</button><button id="today" class="plain-btn">Today</button><button id="next" class="icon-btn" title="下一期" aria-label="下一期">&gt;</button></div></div>
+      <div class="hero"><div class="period-heading"><h1 id="heading">Today</h1><div id="range" class="range"></div></div><button id="add" class="add-main" title="新增筆記" aria-label="新增筆記" hidden>+</button></div>
+      <div id="summary" class="summary"></div>
+    </header>
+    <div id="contentView" aria-busy="true">載入中…</div>
+    <section id="dailyReflection" class="day-section" aria-labelledby="dailyReflectionTitle" hidden>
+      <details id="reflectionEditor">
+        <summary id="reflectionToggle" class="reflection-summary"><h2 id="dailyReflectionTitle">每日回顧</h2></summary>
+        <form id="dailyReflectionForm">
+          <fieldset id="reflectionFields" class="reflection-fields" disabled>
+            <div class="field"><label for="affirmation">肯定</label><textarea id="affirmation" rows="2" maxlength="500"></textarea></div>
+            <div class="field"><label for="gratitude1">感謝 1</label><textarea id="gratitude1" rows="2" maxlength="500"></textarea></div>
+            <div class="field"><label for="gratitude2">感謝 2</label><textarea id="gratitude2" rows="2" maxlength="500"></textarea></div>
+            <div class="field"><label for="gratitude3">感謝 3</label><textarea id="gratitude3" rows="2" maxlength="500"></textarea></div>
+            <div class="field"><label for="review">檢討</label><textarea id="review" rows="2" maxlength="500"></textarea></div>
+          </fieldset>
+          <div class="reflection-actions">
+            <span id="reflectionStatus" class="reflection-status" role="status"></span>
+            <button id="reflectionRetry" class="plain-btn" type="button" hidden>重新載入</button>
+            <button id="reflectionSave" class="primary" type="submit" disabled>儲存回顧</button>
+          </div>
+        </form>
+      </details>
+      <ul id="reflectionList" class="reflection-list" aria-label="已儲存的每日回顧" hidden></ul>
+    </section>
+    <div id="habitsView" hidden></div>
+    <div class="legend">• Task 待辦　V 已完成　▣ Event 事件　– Note 筆記　★ 重要　→ 遷移</div>
+  </div>
+  <section id="settingsPage" class="container" hidden aria-labelledby="settingsTitle">
+    <header class="frozen-header">
+      <h1 id="settingsTitle" class="settings-heading" tabindex="-1">Settings</h1>
+    </header>
+    <section class="settings-card" aria-labelledby="reportSettingsTitle">
+      <h2 id="reportSettingsTitle">報表</h2>
+      <button id="reportOpen" class="plain-btn" type="button">開啟 11 天報表</button>
+    </section>
+    <section class="settings-card" aria-labelledby="habitSettingsTitle">
+      <h2 id="habitSettingsTitle">Habits</h2>
+      <div id="habitSettingsContent"></div>
+    </section>
+    <section class="settings-card" aria-labelledby="tagSettingsTitle">
+      <h2 id="tagSettingsTitle">TAGS 標籤</h2>
+      <p id="tagContext" class="settings-context"></p>
+      <div id="tags" class="tag-list"></div>
+    </section>
+    <section class="settings-card" aria-labelledby="syncSettingsTitle">
+      <h2 id="syncSettingsTitle">行事曆</h2>
+      <button id="phoneCalendarOpen" class="plain-btn" type="button">手機行事曆同步</button>
+    </section>
+    <section class="settings-card" aria-labelledby="installSettingsTitle">
+      <h2 id="installSettingsTitle">安裝子彈筆記</h2>
+      <p id="installJournalHint" class="settings-context" role="status"></p>
+      <button id="installJournal" class="primary" type="button">安裝子彈筆記</button>
+    </section>
+  </section>
+  <section id="reportPage" class="container" hidden aria-labelledby="reportTitle">
+    <header class="frozen-header report-header">
+      <div class="report-heading">
+        <h1 id="reportTitle" class="settings-heading" tabindex="-1">11 天報表</h1>
+        <p id="reportRange" class="settings-context"></p>
+      </div>
+      <div class="report-toolbar">
+        <button id="reportBack" class="plain-btn" type="button">返回設定</button>
+        <button id="reportCopy" class="primary" type="button" disabled>複製報表</button>
+      </div>
+      <p id="reportStatus" class="settings-context" role="status"></p>
+    </header>
+    <textarea id="reportCopyFallback" aria-label="報表純文字" readonly hidden></textarea>
+    <div id="reportList"></div>
+  </section></main>
+</div>
+
+<div id="overlay" class="overlay" role="presentation">
+  <div class="modal editor-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle" class="editor-sr-only">新增筆記</h2>
+    <div class="editor-body">
+      <div class="editor-title-row">
+        <input type="text" id="entryTitle" aria-label="Title 標題" aria-required="true" maxlength="160" placeholder="Title">
+        <button id="close" class="close editor-close" type="button" aria-label="關閉">×</button>
+      </div>
+      <textarea id="entryText" class="editor-description" aria-label="Description 內容" maxlength="3000" rows="2" placeholder="Description"></textarea>
+      <div class="type-tabs" id="typeTabs" role="group" aria-label="選擇種類">
+        <button type="button" data-type="TASK" class="selected">✓ Task</button>
+        <button type="button" data-type="EVENT">▣ Event</button>
+        <button type="button" data-type="NOTE">– Note</button>
+      </div>
+      <input type="hidden" id="type" value="TASK">
+      <div class="editor-toolbar" role="group" aria-label="紀錄選項">
+        <button class="editor-tool editor-date-tool" id="scopeSelection" type="button">
+          <span aria-hidden="true">▦</span><span id="editorDateLabel"></span>
+        </button>
+        <div class="editor-icon-pair">
+          <button class="editor-tool editor-icon-tool" id="editorImportant" type="button" aria-label="標示重要" aria-pressed="false" title="標示重要">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m12 2.8 2.75 5.74 6.35.85-4.63 4.43 1.15 6.3L12 17.06l-5.62 3.06 1.15-6.3L2.9 9.39l6.35-.85L12 2.8Z"/>
+            </svg>
+          </button>
+          <button class="editor-tool editor-icon-tool" id="editorExactDate" type="button" aria-label="選擇日期" aria-controls="editorExactDatePanel" aria-expanded="false" title="選擇日期">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <rect x="3" y="5" width="18" height="16" rx="3"/>
+              <path d="M7.5 3v4M16.5 3v4M3 10h18m-12 5h6"/>
+            </svg>
+          </button>
+        </div>
+        <button class="editor-tool editor-icon-tool" id="editorPhotos" type="button" aria-label="新增圖片" aria-controls="notePhotoField" aria-expanded="false" title="新增圖片">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="2.5" y="2.5" width="19" height="19" rx="3"/>
+            <circle cx="8" cy="8" r="1.5"/>
+            <path d="m2.5 17 5-5 3.5 3.5 4.5-5 6 6"/>
+          </svg>
+        </button>
+        <button class="editor-tool editor-icon-tool" id="editorRepeat" type="button" aria-controls="editorRepeatPanel" aria-expanded="false" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 10V7a2 2 0 0 1 2-2h14m-4-3 4 3-4 3m4 6v3a2 2 0 0 1-2 2H4m4-3-4 3 4 3"/></svg>
+          <span id="repeatLabel">不重複</span>
+        </button>
+        <button class="editor-tool editor-icon-tool" id="editorTags" type="button" aria-label="標籤" aria-controls="editorTagPanel" aria-expanded="false" title="標籤">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M10 3.5 7 20.5M17 3.5l-3 17M4 9h17M3 15h17"/>
+          </svg>
+        </button>
+      </div>
+      <div id="editorDatePanel" class="editor-panel" hidden>
+        <div id="planMonthField" class="field" hidden>
+          <label for="planMonth">選擇月份</label><input id="planMonth" type="month">
+        </div>
+        <div id="planWeekField" class="field" hidden>
+          <label for="planWeek">指定週</label><select id="planWeek"></select>
+        </div>
+        <div class="field" id="normalDateField" hidden>
+          <label for="normalDate">選擇日期</label><input type="date" id="normalDate">
+        </div>
+      </div>
+      <div class="editor-panel" id="editorExactDatePanel" hidden>
+        <div class="field">
+          <label for="scopedDate">選擇日期</label>
+          <input id="scopedDate" type="date" aria-describedby="scopedDateHint">
+          <p id="scopedDateHint" class="hint">選日期後會顯示在該日清單。留空可保留整段期間。</p>
+        </div>
+      </div>
+      <div class="editor-panel" id="eventTimeField" hidden>
+        <div class="field"><label for="eventTime">時間</label><input type="time" id="eventTime"></div>
+      </div>
+      <div id="editorRepeatPanel" class="editor-panel" hidden>
+        <div class="field">
+          <label for="repeatUnit">重複頻率</label>
+          <select id="repeatUnit">
+            <option value="">不重複</option>
+            <option value="day">每天</option>
+            <option value="week">每週</option>
+            <option value="month">每月</option>
+            <option value="year">每年</option>
+          </select>
+        </div>
+        <div id="repeatOptions" hidden>
+          <div class="field">
+            <label for="repeatInterval" id="repeatIntervalLabel">重複間隔</label>
+            <input id="repeatInterval" type="number" inputmode="numeric" min="1" max="365" step="1" value="1">
+          </div>
+          <div class="field">
+            <label for="repeatEnding">結束方式</label>
+            <select id="repeatEnding"><option value="count">重複次數</option><option value="until">截止日期</option></select>
+          </div>
+          <div class="field" id="repeatCountField">
+            <label for="repeatCount">總次數（含首次，最多 1,000 次）</label>
+            <input id="repeatCount" type="number" inputmode="numeric" min="2" max="1000" step="1" value="2">
+          </div>
+          <div class="field" id="repeatUntilField" hidden>
+            <label for="repeatUntil">截止日期（含當日）</label>
+            <input id="repeatUntil" type="date">
+          </div>
+          <p class="hint">每次會建立獨立項目。新增的圖片會附在首次。</p>
+        </div>
+      </div>
+      <div id="notePhotoField" class="editor-panel" hidden>
+        <div class="field">
+          <label for="notePhotoFiles">從手機選擇圖片（最多 6 張）</label>
+          <input id="notePhotoFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+          <div id="notePhotoDraft" class="note-photos"></div>
+        </div>
+      </div>
+      <div id="editorTagPanel" class="editor-panel" hidden>
+        <div class="field">
+          <label for="tagInput">標籤</label><input type="text" id="tagInput" placeholder="以逗號分隔多個標籤">
+          <div id="tagSuggestions" class="tag-suggestions"></div>
+        </div>
+      </div>
+      <input type="checkbox" id="important" hidden>
+    </div>
+    <div class="modal-foot editor-foot"><button id="delete" class="danger" type="button" style="display:none">刪除</button><button id="migrate" class="secondary" type="button" style="display:none">遷移 →</button><button id="cancel" class="secondary" type="button">取消</button><button id="save" class="primary" type="button">儲存</button></div>
+  </div>
+</div>
+
+<dialog class="period-picker" id="periodPicker" aria-labelledby="periodPickerTitle">
+  <h2 id="periodPickerTitle"></h2>
+  <div class="period-picker-nav">
+    <button class="icon-btn" id="pickerPrev" type="button" aria-label="上一期">‹</button>
+    <strong id="pickerHeading" aria-live="polite"></strong>
+    <button class="icon-btn" id="pickerNext" type="button" aria-label="下一期">›</button>
+  </div>
+  <div class="period-picker-grid" id="pickerGrid"></div>
+  <div class="period-picker-foot">
+    <button class="secondary" id="pickerCancel" type="button">取消</button>
+    <button class="primary" id="pickerConfirm" type="button">確定</button>
+  </div>
+</dialog>
+
+<dialog class="period-picker" id="deleteRepeatDialog" aria-labelledby="deleteRepeatTitle" aria-describedby="deleteRepeatHint">
+  <h2 id="deleteRepeatTitle"></h2>
+  <p class="hint" id="deleteRepeatHint">刪除後無法復原。</p>
+  <div class="delete-repeat-actions">
+    <button type="button" value="single" class="danger">只刪除這一次</button>
+    <button type="button" value="future" class="danger">刪除這次及之後所有重複項目</button>
+    <button type="button" value="cancel" class="secondary" autofocus>取消</button>
+  </div>
+</dialog>
+
+<!-- 指定遷移日期的視窗 -->
+<div class="overlay migrate-overlay" id="migrationOverlay" role="presentation">
+  <div class="migrate-dialog" role="dialog" aria-modal="true" aria-labelledby="migrationTitle">
+    <h2 id="migrationTitle">Migrate · 遷移到指定日期</h2>
+    <p style="color:#777;font-size:12px;line-height:1.6">原紀錄會標示已遷移，新日期會建立新的 Task／Note；其他時間模式會依日期同步顯示。</p>
+    <label for="migrationDate">選擇遷移日期</label>
+    <input id="migrationDate" type="date">
+    <div class="migrate-actions">
+      <button id="migrationCancel" class="secondary" type="button">返回</button>
+      <button id="migrationConfirm" class="primary" type="button">確認遷移</button>
+    </div>
+  </div>
+</div>
+
+<dialog class="calendar-settings" id="phoneCalendarDialog" aria-label="手機行事曆同步">
+  <p id="phoneCalendarStatus" role="status"></p>
+  <section id="phoneCalendarAccounts" class="phone-calendar-accounts" aria-label="已同步的帳號" hidden></section>
+  <button id="phoneCalendarRefresh" class="secondary" type="button">更新同步狀態</button>
+  <details id="phoneCalendarPairing">
+    <summary>手機連線設定</summary>
+    <a class="phone-calendar-download" href="/downloads/phone-calendar-sync.apk" download>下載或更新手機同步 App（APK）</a>
+    <p class="phone-calendar-hint">首次連接子彈筆記時，請產生配對碼並貼到手機同步 App。已連線的手機可直接同步。</p>
+    <div class="phone-calendar-controls">
+      <button id="phoneCalendarPair" class="secondary" type="button">產生配對碼</button>
+      <button id="phoneCalendarDisconnect" class="secondary" type="button" disabled>解除配對</button>
+    </div>
+    <div id="phoneCalendarSecretRow" class="field" hidden>
+      <label for="phoneCalendarSecret">手機配對碼</label>
+      <input id="phoneCalendarSecret" type="text" autocomplete="off" readonly>
+      <button id="phoneCalendarCopy" class="secondary" type="button">複製配對碼</button>
+    </div>
+  </details>
+  <div class="modal-foot"><button id="phoneCalendarClose" class="secondary" type="button">關閉</button></div>
+</dialog>
+
+<dialog id="notePhotoViewer" aria-label="放大照片">
+  <button id="closeNotePhoto" class="plain-btn" type="button">關閉</button>
+  <img id="notePhotoFull" alt="筆記照片">
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+
+'use strict';
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+// 依台灣日期初始化，不受使用者電腦時區設定干擾。
+function taiwanToday() {
+  const parts = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const p = Object.fromEntries(parts.map(x=>[x.type,x.value]));
+  return `${p.year}-${p.month}-${p.day}`;
+}
+function parse(s) { const [y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d)); }
+function fmt(d) { return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`; }
+function plusDays(s,n) {let d=parse(s);d.setUTCDate(d.getUTCDate()+n);return fmt(d);}
+function periodOf(s,view) {
+  const d=parse(s);
+  if(view==='Week')d.setUTCDate(d.getUTCDate()-d.getUTCDay());
+  if(view==='Month')d.setUTCDate(1);
+  if(view==='Year'){d.setUTCMonth(0,1);}
+  return fmt(d);
+}
+function shiftPeriod(s,view,step){const d=parse(periodOf(s,view));if(view==='Day')d.setUTCDate(d.getUTCDate()+step);if(view==='Week')d.setUTCDate(d.getUTCDate()+step*7);if(view==='Month')d.setUTCMonth(d.getUTCMonth()+step);if(view==='Year')d.setUTCFullYear(d.getUTCFullYear()+step);return fmt(d);}
+function weekNumber(s) {const d=parse(s);d.setUTCDate(d.getUTCDate()+1);const day=(d.getUTCDay()+6)%7;d.setUTCDate(d.getUTCDate()-day+3);const first=new Date(Date.UTC(d.getUTCFullYear(),0,4));return 1+Math.round((d-first)/604800000);}
+const weekdays=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let lastSeenToday = taiwanToday();
+const state={view:'Day',settings:false,date:lastSeenToday,items:[],tag:'',search:'',busy:false,request:0,editing:null};
+function key(){return periodOf(state.date,state.view);}
+function toast(message){$('toast').textContent=message;$('toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').style.display='none',3300);}
+async function call(action, ...args) {
+  const response = await fetch('/api/entries', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, args })
+  });
+  if (response.redirected || !response.headers.get('Content-Type')?.includes('application/json')) {
+    throw new Error('登入已失效或連線異常，請重新整理頁面');
+  }
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+}
+async function action(fn){if(state.busy)return;state.busy=true;const save=$('save');save.disabled=true;try{await fn();}catch(e){toast('操作失敗：'+e.message);}finally{state.busy=false;save.disabled=false;}}
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+function tagsOf(item){return (item.tags||[]).map(x=>'#'+x.toLowerCase());}
+function allKnownTags(){const set=new Set();state.items.forEach(x=>(x.tags||[]).forEach(t=>set.add(t)));return [...set].sort((a,b)=>a.localeCompare(b,'zh-Hant'));}
+function splitTags(text){return [...new Set(text.split(/[,，\n]+/).map(x=>x.trim().replace(/^#+/,'')).filter(Boolean))].slice(0,20);}
+function renderTagChoices(){const root=$('tagSuggestions');root.replaceChildren();allKnownTags().forEach(t=>{const b=el('button','tag-choice','#'+t);b.type='button';b.onclick=()=>{const list=splitTags($('tagInput').value);if(!list.includes(t))list.push(t);$('tagInput').value=list.join(', ');};root.append(b);});}
+function visibleItems(){return state.items.filter(x=>(!state.tag||tagsOf(x).includes(state.tag))&&(!state.search||[x.title,x.description,(x.tags||[]).join(' ')].join(' ').toLowerCase().includes(state.search.toLowerCase())));}
+function renderTags() {
+  const root = $('tags');
+  root.replaceChildren();
+  $('tagContext').textContent = state.view + ' · ' + $('range').textContent;
+  const tags = [...new Set(state.items.flatMap(tagsOf))].sort();
+  if (state.tag && !tags.includes(state.tag)) state.tag = '';
+  if (!tags.length) {
+    root.append(el('span', 'settings-context', '目前期間沒有標籤。'));
+    return;
+  }
+  for (const tag of ['', ...tags]) {
+    const button = el('button', 'tag-pill' + (state.tag === tag ? ' on' : ''), tag || '全部標籤');
+    button.type = 'button';
+    button.setAttribute('aria-pressed', String(state.tag === tag));
+    button.onclick = () => {
+      state.tag = tag;
+      showSettings(false);
+      render();
+    };
+    root.append(button);
+  }
+}
+
+function showSettings(open) {
+  closeEntryMenus();
+  state.settings = open;
+  $('journalPage').hidden = open;
+  $('settingsPage').hidden = !open;
+  $('reportPage').hidden = true;
+  $('settingsTab').classList.toggle('active', open);
+  $('settingsTab').setAttribute('aria-pressed', String(open));
+  renderHeader();
+  if (open) {
+    renderTags();
+    $('settingsTitle').focus();
+    void loadHabitSettings();
+  }
+  window.scrollTo(0, 0);
+}
+
+// 中文介面搭配動態英文時間標題
+let reportText = '';
+let reportRequest = 0;
+
+function reportLine(item) {
+  if (item.type === 'EVENT') return '▣ ' + (item.time ? item.time + ' ' : '') + item.title;
+  const details = [];
+  if (item.reportDate !== item.displayDate) details.push('原定 ' + item.displayDate);
+  if (item.migratedTo) details.push('已移轉至 ' + item.migratedTo);
+  else if (item.status === 'MIGRATED') details.push('已移轉');
+  if (item.migratedFrom) details.push('自 ' + item.migratedFrom + ' 移入');
+  return '• ' + (item.time ? item.time + ' ' : '') + item.title + (details.length ? '（' + details.join('，') + '）' : '');
+}
+
+function renderReport(report) {
+  $('reportRange').textContent = report.start + ' ～ ' + report.through;
+  const groups = new Map();
+  for (const item of report.items) {
+    if (!groups.has(item.reportDate)) groups.set(item.reportDate, []);
+    groups.get(item.reportDate).push(item);
+  }
+
+  const text = [];
+  const sections = document.createDocumentFragment();
+  for (let index = 0; index < 11; index++) {
+    const date = plusDays(report.start, index);
+    const isToday = date === report.today;
+    const label = date + (isToday ? '（今天）' : '');
+    const dayText = [];
+    const section = el('section', 'report-day' + (isToday ? ' today' : ''));
+    const header = el('div', 'report-day-header');
+    const copy = el('button', 'plain-btn report-day-copy', '複製當日');
+    copy.type = 'button';
+    copy.setAttribute('aria-label', '複製 ' + date + ' 的待辦與事件');
+    header.append(el('h2', '', label), copy);
+    section.append(header);
+    const items = groups.get(date) || [];
+    items.sort((a, b) => a.type === b.type
+      ? (a.time || '').localeCompare(b.time || '')
+      : a.type === 'TASK' ? -1 : 1);
+    if (items.length) {
+      const list = el('ul');
+      for (const item of items) {
+        const line = reportLine(item);
+        const row = el('li', '', line);
+        if (item.description) row.append(el('span', 'report-description', item.description));
+        list.append(row);
+        dayText.push(line);
+        if (item.description) dayText.push(...item.description.split(/\r?\n/).map(line => '  ' + line));
+      }
+      section.append(list);
+    } else {
+      section.append(el('p', '', '無待辦或事件'));
+    }
+    const copyText = dayText.join('\n');
+    copy.disabled = !copyText;
+    copy.onclick = () => copyReportText(copyText, '已複製 ' + date, copy);
+    text.push(label + '\n' + (copyText || '無待辦或事件'));
+    sections.append(section);
+  }
+  $('reportList').replaceChildren(sections);
+  reportText = text.join('\n\n');
+  $('reportStatus').textContent = '共 ' + report.items.length + ' 筆';
+  $('reportCopy').disabled = false;
+}
+
+async function openReport() {
+  $('settingsPage').hidden = true;
+  $('reportPage').hidden = false;
+  $('reportTitle').focus();
+  window.scrollTo(0, 0);
+  const request = ++reportRequest;
+  reportText = '';
+  $('reportRange').textContent = '';
+  $('reportList').replaceChildren();
+  $('reportCopy').disabled = true;
+  $('reportCopyFallback').hidden = true;
+  $('reportCopyFallback').value = '';
+  $('reportStatus').textContent = '載入中…';
+  try {
+    const report = await call('listReport');
+    if (request === reportRequest && !$('reportPage').hidden) renderReport(report);
+  } catch (error) {
+    if (request !== reportRequest || $('reportPage').hidden) return;
+    $('reportStatus').textContent = '無法載入報表：' + error.message;
+    const retry = el('button', 'plain-btn', '重新載入');
+    retry.onclick = openReport;
+    $('reportList').append(retry);
+  }
+}
+
+$('reportOpen').onclick = openReport;
+$('reportBack').onclick = () => showSettings(true);
+$('reportCopy').onclick = () => copyReportText(reportText, '已複製報表');
+
+async function copyReportText(text, successMessage, dayButton) {
+  if (!text) return;
+  const fallback = $('reportCopyFallback');
+  fallback.hidden = true;
+  try {
+    await navigator.clipboard.writeText(text);
+    $('reportStatus').textContent = successMessage;
+    if (dayButton) {
+      dayButton.textContent = '已複製';
+      setTimeout(() => { dayButton.textContent = '複製當日'; }, 1500);
+    }
+  } catch {
+    fallback.value = text;
+    fallback.hidden = false;
+    fallback.focus();
+    fallback.select();
+    $('reportStatus').textContent = '已選取報表文字，請使用瀏覽器的複製功能。';
+  }
+}
+
+const currentPeriodLabels = { Day: 'Today', Week: 'This Week', Month: 'This Month', Year: 'This Year' };
+
+function renderHeader() {
+  document.body.dataset.view = state.view;
+  $('today').textContent = currentPeriodLabels[state.view];
+  document.querySelectorAll('#nav [data-view]').forEach(b => {
+    const active = !state.settings && b.dataset.view === state.view;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', String(active));
+  });
+
+  const selected = key();
+  const add = $('add');
+  const scopeLabel = scopeLabels[state.view];
+  add.hidden = !scopeLabel;
+  if (scopeLabel) {
+    const addLabel = '新增 ' + scopeLabel + ' 紀錄';
+    add.title = addLabel;
+    add.setAttribute('aria-label', addLabel);
+  }
+  const today = taiwanToday();
+  const d = parse(selected);
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const weekdayNames = [
+    'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+    'Thursday', 'Friday', 'Saturday'
+  ];
+
+  let heading = '';
+  let overline = '';
+  let range = '';
+
+  if (state.view === 'Day') {
+    heading = selected === today
+      ? 'Today'
+      : selected === plusDays(today, 1)
+        ? 'Tomorrow'
+        : weekdayNames[d.getUTCDay()];
+    overline = 'DAILY LOG';
+    range = `${selected} ${weekdays[d.getUTCDay()]}`;
+
+  } else if (state.view === 'Week') {
+    const currentWeek = periodOf(today, 'Week');
+    const nextWeek = shiftPeriod(currentWeek, 'Week', 1);
+    heading = selected === currentWeek
+      ? 'This Week'
+      : selected === nextWeek
+        ? 'Next Week'
+        : `Week ${weekNumber(selected)}`;
+    overline = 'WEEKLY LOG';
+    range = `${selected} — ${plusDays(selected, 6)}`;
+
+  } else if (state.view === 'Month') {
+    const currentMonth = periodOf(today, 'Month');
+    const nextMonth = shiftPeriod(currentMonth, 'Month', 1);
+    heading = selected === currentMonth
+      ? 'This Month'
+      : selected === nextMonth
+        ? 'Next Month'
+        : `${monthNames[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+    overline = 'MONTHLY LOG';
+    range = `${d.getUTCFullYear()} 年 ${d.getUTCMonth() + 1} 月`;
+
+  } else if (state.view === 'Year') {
+    const currentYear = periodOf(today, 'Year');
+    const nextYear = shiftPeriod(currentYear, 'Year', 1);
+    heading = selected === currentYear
+      ? 'This Year'
+      : selected === nextYear
+        ? 'Next Year'
+        : String(d.getUTCFullYear());
+    overline = 'YEARLY LOG';
+    range = d.getUTCFullYear() + ' 年';
+  }
+
+  $('heading').textContent = heading;
+  $('overline').textContent = overline;
+  $('range').textContent = range;
+}
+const habitState = {
+  request:0, settingsRequest:0, expanded:new Set(), settingsOpen:new Set(),
+  busy:false, pending:new Map()
+};
+const habitNumber = new Intl.NumberFormat('zh-TW',{maximumFractionDigits:3});
+
+function habitQuantity(number, unit) {
+  return habitNumber.format(number) + ' ' + unit;
+}
+
+function habitButton(label, cls='plain-btn') {
+  const button = el('button',cls,label);
+  button.type = 'button';
+  return button;
+}
+
+async function loadHabits(view, start) {
+  const request = ++habitState.request;
+  const root = $('habitsView');
+  root.hidden = true;
+  root.replaceChildren();
+  if (view === 'Year') return;
+  try {
+    const data = await call('listHabits',view,start);
+    if (request !== habitState.request) return;
+    renderHabitCards(root,view,start,data);
+  } catch {
+    if (request !== habitState.request) return;
+    const retry = habitButton('重新載入打卡紀錄');
+    retry.onclick = () => loadHabits(view,start);
+    root.append(retry);
+    root.hidden = false;
+  }
+}
+
+function habitPeriods(habit, view, start, today) {
+  const end = shiftPeriod(start,view,1);
+  const periods = new Map();
+  const periodKey = (frequency, date, unit) => JSON.stringify([frequency,date,unit]);
+  for (const log of habit.logs) {
+    const date = log.frequency === 'Weekly' ? periodOf(log.day,'Week') : log.day;
+    const key = periodKey(log.frequency,date,log.unit);
+    const row = periods.get(key) || {frequency:log.frequency,date,unit:log.unit,total:0,count:0};
+    row.total += Math.round(log.total * 1000);
+    row.count += log.count;
+    row.goal = log.goal;
+    periods.set(key,row);
+  }
+  const current = habit.frequency === 'Weekly' ? periodOf(today,'Week') : today;
+  let date = habit.frequency === 'Weekly' ? periodOf(start,'Week') : start;
+  for (; date < end && date <= today; date = plusDays(date,habit.frequency === 'Weekly' ? 7 : 1)) {
+    const key = periodKey(habit.frequency,date,habit.unit);
+    if (!periods.has(key)) {
+      periods.set(key,{frequency:habit.frequency,date,unit:habit.unit,total:0,count:0,goal:habit.goal});
+    } else if (date === current && habit.active) {
+      periods.get(key).goal = habit.goal;
+    }
+  }
+  return [...periods.values()].sort((a,b)=>a.date.localeCompare(b.date) || a.frequency.localeCompare(b.frequency));
+}
+
+function habitPeriodText(period) {
+  return habitNumber.format(period.total / 1000) + ' / ' + habitQuantity(period.goal,period.unit);
+}
+
+function habitPeriodMet(period) {
+  return period.total >= Math.round(period.goal * 1000);
+}
+
+function renderHabitCards(root, view, start, data) {
+  root.hidden = data.habits.length === 0;
+  for (const habit of data.habits) {
+    const card = el('section','water-card habit-card');
+    const head = el('div','water-head');
+    const toggle = habitButton('', 'water-summary-button');
+    if (habit.kind === 'water') {
+      const drop = el('span','water-drop');
+      drop.setAttribute('aria-hidden','true');
+      toggle.append(drop);
+    }
+    const copy = el('span','water-summary-copy');
+    const subtitle = el('span','water-sub');
+    const chevron = el('span','water-chevron','⌄');
+    chevron.setAttribute('aria-hidden','true');
+    copy.append(el('span','water-name',habit.title),subtitle);
+    toggle.append(copy,chevron);
+    head.append(toggle);
+    const body = el('div','water-body');
+    body.id = 'habit-details-' + habit.id;
+    toggle.setAttribute('aria-controls',body.id);
+    const expansionKey = view + ':' + habit.id;
+    const expand = () => {
+      const open = habitState.expanded.has(expansionKey);
+      body.hidden = !open;
+      toggle.setAttribute('aria-expanded',String(open));
+    };
+    toggle.onclick = () => {
+      if (habitState.expanded.has(expansionKey)) habitState.expanded.delete(expansionKey);
+      else habitState.expanded.add(expansionKey);
+      expand();
+    };
+    expand();
+
+    const periods = habitPeriods(habit,view,start,data.today);
+    if (view === 'Day' && start <= data.today) {
+      const date = habit.frequency === 'Weekly' ? periodOf(start,'Week') : start;
+      const target = periods.find(period=>period.date===date && period.frequency===habit.frequency && period.unit===habit.unit);
+      subtitle.textContent = habit.frequency+' · '+habitPeriodText(target)+(habitPeriodMet(target)?' · 已達標':'');
+      const progress = el('progress','water-progress');
+      progress.max = target.goal;
+      progress.value = Math.min(target.total / 1000,target.goal);
+      progress.setAttribute('aria-label',habit.title+'目標進度');
+      const todayLogs = habit.logs.filter(log=>log.day===start);
+      const count = todayLogs.reduce((sum,log)=>sum+log.count,0);
+      body.append(progress,el('div','water-help','當日已打卡 '+count+' 筆 · 每次 '+habitQuantity(habit.amount,habit.unit)));
+      if (habit.active) {
+        const add = habitButton('＋打卡','water-log');
+        add.setAttribute('aria-label',habit.title+'，打卡 '+habitQuantity(habit.amount,habit.unit));
+        add.onclick = () => {
+          if (habitState.busy) return;
+          const pendingKey = habit.id+':'+start;
+          if (!habitState.pending.has(pendingKey)) habitState.pending.set(pendingKey,crypto.randomUUID());
+          return changeHabit(add,async () => {
+            await call('addHabitLog',habit.id,start,habitState.pending.get(pendingKey));
+            habitState.pending.delete(pendingKey);
+          });
+        };
+        head.append(add);
+        const undo = habitButton('撤銷最近一筆');
+        const last = todayLogs.at(-1);
+        undo.disabled = !last;
+        undo.onclick = () => changeHabit(undo,() => call('removeHabitLog',habit.id,start,last.lastId));
+        const controls = el('div','water-actions');
+        controls.append(undo);
+        body.append(controls);
+        if (habit.kind === 'water') {
+          const settings = habitDetails('journal:'+habit.id,'設定杯量與目標','');
+          settings.append(habitForm(habit));
+          body.append(settings);
+        }
+      }
+    } else if (view === 'Day') {
+      subtitle.textContent = '尚未到日期';
+    } else {
+      const summaries = [];
+      for (const [frequency,label] of [['Daily','日'],['Weekly','週']]) {
+        const relevant = periods.filter(period=>period.frequency===frequency);
+        const dates = new Set(relevant.map(period=>period.date));
+        const met = new Set(relevant.filter(habitPeriodMet).map(period=>period.date));
+        if (dates.size) summaries.push('達標 '+met.size+' / '+dates.size+' '+label);
+      }
+      subtitle.textContent = summaries.join(' · ') || '期間尚未開始';
+    }
+    if (!habit.active) body.append(el('div','water-help','已停用'));
+    if (periods.length) {
+      const history = el('ul','water-history');
+      for (const period of periods) {
+        const met = habitPeriodMet(period);
+        const date = formatShortDate(period.date);
+        const label = period.frequency === 'Weekly' ? date+'–'+formatShortDate(plusDays(period.date,6)) : date;
+        const row = el('li');
+        row.append(el('span','',label),el('span','',habitPeriodText(period)),
+          el('span',met?'water-met':period.count?'water-unmet':'water-empty',met?'已達標':period.count?'未達標':'未記錄'));
+        history.append(row);
+      }
+      body.append(history);
+    }
+    card.append(head,body);
+    root.append(card);
+  }
+}
+
+async function changeHabit(button, change, success, failure='操作失敗') {
+  if (habitState.busy || button.disabled) return;
+  button.disabled = habitState.busy = true;
+  try {
+    await change();
+    await Promise.all([
+      loadHabits(state.view,key()),
+      ...(!$('settingsPage').hidden && success ? [loadHabitSettings()] : [])
+    ]);
+    if (success) toast(success);
+  } catch (error) {
+    toast(failure+'：'+error.message);
+  } finally {
+    button.disabled = habitState.busy = false;
+  }
+}
+
+function habitDetails(key, title, subtitle, className='') {
+  const details = el('details',className);
+  const summary = el('summary','habit-setting-summary');
+  summary.append(el('span','habit-setting-name',title));
+  if (subtitle) summary.append(el('span','habit-setting-status',subtitle));
+  details.append(summary);
+  details.open = habitState.settingsOpen.has(key);
+  details.ontoggle = () => {
+    if (details.open) habitState.settingsOpen.add(key);
+    else habitState.settingsOpen.delete(key);
+  };
+  return details;
+}
+
+function habitForm(habit) {
+  const form = el('form','water-form');
+  const kind = habit?.kind ?? 'custom';
+  const settings = habit || {title:'',goal:1,amount:1,unit:'次',frequency:'Daily'};
+  const fields = el('div','water-fields');
+  const inputs = {};
+  for (const [name, label, type, length] of [
+    ['title','名稱','text',48],['frequency','打卡頻率','select'],
+    ['goal','每日目標','number'],['amount','每次數量','number'],['unit','單位','text',16]
+  ]) {
+    const field = el('label',name==='title'?'habit-full-field':'');
+    const caption = el('span','',label);
+    const input = el(type==='select'?'select':'input');
+    if (type === 'select') {
+      for (const frequency of ['Daily','Weekly']) {
+        const option = el('option','',frequency);
+        option.value = frequency;
+        input.append(option);
+      }
+    } else {
+      input.type = type;
+      if (type === 'number') {
+        input.min = '0.001';
+        input.max = '1000000';
+        input.step = '0.001';
+        input.inputMode = 'decimal';
+      } else {
+        input.maxLength = length;
+      }
+    }
+    input.name = name;
+    input.required = true;
+    input.value = settings[name];
+    inputs[name] = input;
+    field.append(caption,input);
+    fields.append(field);
+    if (name === 'goal') {
+      const update = () => {caption.textContent = inputs.frequency.value === 'Weekly' ? '每週目標' : '每日目標';};
+      inputs.frequency.onchange = update;
+      update();
+    }
+  }
+  const controls = el('div','water-actions');
+  const save = habitButton(habit?'儲存設定':'新增打卡項目','primary');
+  save.type = 'submit';
+  controls.append(save);
+  let id = habit?.id;
+  form.onsubmit = event => {
+    event.preventDefault();
+    const settings = {
+      kind,title:inputs.title.value.trim(),frequency:inputs.frequency.value,
+      goal:Number(inputs.goal.value),amount:Number(inputs.amount.value),unit:inputs.unit.value.trim()
+    };
+    id ||= crypto.randomUUID();
+    return changeHabit(save,async () => {
+      await call(habit?'updateHabit':'saveHabit',id,settings);
+      if (!habit) habitState.settingsOpen.delete('new:custom');
+    },habit?'已儲存':'已新增','儲存失敗');
+  };
+  form.append(fields,controls);
+  return form;
+}
+
+async function loadHabitSettings() {
+  const request = ++habitState.settingsRequest;
+  const root = $('habitSettingsContent');
+  root.replaceChildren(el('p','water-help','載入中…'));
+  try {
+    const habits = await call('listHabitSettings');
+    if (request !== habitState.settingsRequest) return;
+    root.replaceChildren();
+    for (const [kind,title] of [['water','喝水紀錄'],['custom','自訂打卡']]) {
+      const group = habitDetails(kind,title,'','habit-setting-group');
+      const content = el('div','habit-setting-group-content');
+      const items = habits.filter(habit=>habit.kind===kind);
+      for (const habit of items) {
+        const subtitle = habit.frequency+' · 目標 '+habitQuantity(habit.goal,habit.unit)+(habit.active?'':' · 已停用');
+        const item = habitDetails(habit.id,habit.title,subtitle,'habit-setting-item');
+        item.append(habitForm(habit));
+        const controls = el('div','water-actions habit-setting-controls');
+        const active = habitButton(habit.active?'停用':'重新啟用');
+        active.onclick = () => changeHabit(active,() => call('setHabitActive',habit.id,!habit.active),
+          habit.active?'已停用':'已重新啟用');
+        const remove = habitButton('刪除','plain-btn habit-delete');
+        remove.setAttribute('aria-label','刪除 '+habit.title);
+        remove.onclick = () => {
+          if (!confirm('確定永久刪除「'+habit.title+'」及其所有打卡紀錄？此操作無法復原。')) return;
+          return changeHabit(remove,async () => {
+            await call('deleteHabit',habit.id);
+            habitState.settingsOpen.delete(habit.id);
+          },'已刪除','刪除失敗');
+        };
+        controls.append(active,remove);
+        item.append(controls);
+        content.append(item);
+      }
+      if (kind === 'custom') {
+        const add = habitDetails('new:custom','＋ 新增自訂打卡','','habit-setting-item');
+        add.append(habitForm());
+        content.append(add);
+      } else if (items.length === 0) {
+        const restore = habitButton('恢復喝水紀錄');
+        restore.onclick = () => changeHabit(restore,() => call('restoreWater'),'已恢復喝水紀錄');
+        const controls = el('div','water-actions');
+        controls.append(restore);
+        content.append(controls);
+      }
+      group.append(content);
+      root.append(group);
+    }
+  } catch {
+    if (request !== habitState.settingsRequest) return;
+    const retry = habitButton('重新載入 Habits 設定');
+    retry.onclick = loadHabitSettings;
+    root.replaceChildren(retry);
+  }
+}
+
+const reflectionFields = ['affirmation','gratitude1','gratitude2','gratitude3','review'];
+const reflectionDrafts = new Map();
+const reflectionSaves = new Map();
+let reflectionDay = null;
+let reflectionRequest = 0;
+
+function showReflectionValues(values) {
+  for (const name of reflectionFields) $(name).value = values[name] ?? '';
+}
+
+function renderReflectionList(values) {
+  const list = $('reflectionList');
+  const rows = [];
+  for (const name of reflectionFields) {
+    const value = values[name]?.trim();
+    if (!value) continue;
+    const row = el('li');
+    const preview = el('span', 'reflection-preview');
+    preview.append(el('strong', '', $(name).labels[0].textContent), ' ' + value);
+    row.append(preview);
+    rows.push(row);
+  }
+  list.replaceChildren(...rows);
+  list.hidden = rows.length === 0;
+}
+
+function enableReflection(enabled) {
+  $('reflectionFields').disabled = !enabled;
+  $('reflectionSave').disabled = !enabled || !reflectionDrafts.has(reflectionDay);
+}
+
+async function loadReflection(day, retry = false) {
+  if (reflectionDay === day && !retry) return;
+  reflectionDay = day;
+  const request = ++reflectionRequest;
+  $('dailyReflection').hidden = !day;
+  if (!day) return;
+
+  if (!retry) $('reflectionEditor').open = false;
+  renderReflectionList({});
+  enableReflection(false);
+  showReflectionValues(reflectionDrafts.get(day) ?? {});
+  $('reflectionRetry').hidden = true;
+  $('reflectionStatus').textContent = '載入中…';
+  try {
+    await reflectionSaves.get(day)?.catch(() => {});
+    if (request !== reflectionRequest) return;
+    const saved = await call('getDailyReflection', day);
+    if (request !== reflectionRequest) return;
+    showReflectionValues({...saved,...reflectionDrafts.get(day)});
+    renderReflectionList(saved);
+    enableReflection(true);
+    $('reflectionStatus').textContent = reflectionDrafts.has(day) ? '尚未儲存' : '';
+  } catch {
+    if (request !== reflectionRequest) return;
+    $('reflectionStatus').textContent = '讀取回顧失敗';
+    $('reflectionRetry').hidden = false;
+  }
+}
+
+$('reflectionRetry').onclick = () => loadReflection(reflectionDay, true);
+$('reflectionFields').oninput = event => {
+  const {id,value} = event.target;
+  if (!reflectionFields.includes(id)) return;
+  reflectionDrafts.set(reflectionDay, {...reflectionDrafts.get(reflectionDay), [id]:value});
+  $('reflectionStatus').textContent = '尚未儲存';
+  enableReflection(true);
+};
+$('dailyReflectionForm').onsubmit = async event => {
+  event.preventDefault();
+  const day = reflectionDay;
+  const draft = reflectionDrafts.get(day);
+  if (!day || !draft || $('reflectionSave').disabled) return;
+
+  const request = reflectionRequest;
+  enableReflection(false);
+  $('reflectionStatus').textContent = '儲存中…';
+  const saving = call('saveDailyReflection', day, draft);
+  reflectionSaves.set(day, saving);
+  try {
+    const saved = await saving;
+    reflectionDrafts.delete(day);
+    if (request !== reflectionRequest) return;
+    showReflectionValues(saved);
+    renderReflectionList(saved);
+    $('reflectionEditor').open = false;
+    $('reflectionToggle').focus();
+    $('reflectionStatus').textContent = '';
+    toast('已儲存每日回顧');
+  } catch (error) {
+    if (request === reflectionRequest) $('reflectionStatus').textContent = '儲存失敗，請再試一次';
+    toast('每日回顧儲存失敗：' + error.message);
+  } finally {
+    reflectionSaves.delete(day);
+    if (request === reflectionRequest) enableReflection(true);
+  }
+};
+
+async function load(){closeEntryMenus();const id=++state.request,view=state.view,k=key();renderHeader();void loadReflection(view==='Day'?k:null);void loadHabits(view,k);$('contentView').setAttribute('aria-busy','true');$('contentView').replaceChildren(el('div','empty-records','載入中…'));try{const data=await call('listEntries',view,k);if(id!==state.request)return;state.items=data;$('contentView').setAttribute('aria-busy','false');render();}catch(e){if(id!==state.request)return;const retry=el('button','plain-btn','重新載入');retry.onclick=load;$('contentView').setAttribute('aria-busy','false');$('contentView').replaceChildren(el('p','empty-records','讀取失敗：'+e.message),retry);}}
+function render(){renderHeader();renderTags();const items=visibleItems();$('summary').replaceChildren(el('span','',`全部 ${state.items.length} 筆 · 未完成 ${state.items.filter(x=>x.type==='TASK'&&x.status==='OPEN').length} 筆`));const search=el('input','search');search.placeholder='搜尋目前期間…';search.value=state.search;search.setAttribute('aria-label','搜尋筆記');search.oninput=e=>{state.search=e.target.value;renderContent();};$('summary').append(search);if (state.tag) {
+    const clear = el('button','active-tag', state.tag + ' ×');
+    clear.setAttribute('aria-label','清除標籤篩選');
+    clear.onclick = () => { state.tag = ''; render(); };
+    const tagRow = el('div','active-tag-row');
+    tagRow.append(clear);
+    $('summary').append(tagRow);
+  }
+  renderContent(items);}
+function isLateTask(item, today = taiwanToday()) {
+  return item.type === 'TASK' && item.status === 'OPEN' &&
+    (item.dueDate || item.displayDate) < today;
+}
+function isOverdue(item) {
+  return item.type === 'TASK' && (item.everOverdue || isLateTask(item));
+}
+function toggleTask(item) {
+  if (state.busy || item.type !== 'TASK' ||
+      !['OPEN','DONE'].includes(item.status)) return;
+  action(async () => {
+    await call('updateEntry', item.id, {
+      status: item.status === 'DONE' ? 'OPEN' : 'DONE'
+    });
+    await load();
+  });
+}
+function taskMark(item, compact) {
+  const holder = el('span','task-mark');
+  const late = isOverdue(item);
+  const b = el('button','task-toggle' + (late ? ' late' : ''),
+    item.status === 'DONE' ? 'V' : '•');
+  b.type = 'button';
+  b.title = item.status === 'DONE' ? '點擊 V 恢復未完成' : '點擊 • 標記完成';
+  b.setAttribute('aria-label',b.title);
+  b.disabled = !['OPEN','DONE'].includes(item.status);
+  b.onclick = event => {event.stopPropagation();toggleTask(item);};
+  holder.append(b);
+  // 即使逾期後標記 DONE，也要另外顯示紅點，不丟失歷史逾期標記。
+  if (late && item.status === 'DONE') {
+    holder.append(el('span','overdue-dot','●'));
+  }
+  return holder;
+}
+let entryMenuTrigger;
+let entryMenuPopup;
+function closeEntryMenus() {
+  entryMenuPopup?.remove();
+  entryMenuTrigger?.setAttribute('aria-expanded', 'false');
+  entryMenuPopup = entryMenuTrigger = null;
+}
+
+function positionEntryMenu(popup, trigger) {
+  const anchor = trigger.getBoundingClientRect();
+  const viewportBottom = document.documentElement.clientHeight;
+  const nav = $('nav');
+  const bottom = getComputedStyle(nav).position === 'fixed'
+    ? Math.min(viewportBottom, nav.getBoundingClientRect().top) : viewportBottom;
+  const gutter = 8;
+  const gap = 4;
+  const above = Math.max(0, anchor.top - gap - gutter);
+  const below = Math.max(0, bottom - gutter - anchor.bottom - gap);
+  const height = popup.getBoundingClientRect().height;
+  const openUp = height > below && above > below;
+  popup.style.maxHeight = (openUp ? above : below) + 'px';
+  const width = popup.getBoundingClientRect().width;
+  popup.style.left = Math.max(gutter, Math.min(anchor.right - width,
+    document.documentElement.clientWidth - width - gutter)) + 'px';
+  popup.style.top = (openUp ? anchor.top - gap - popup.getBoundingClientRect().height
+    : anchor.bottom + gap) + 'px';
+}
+function showMigrationDate(item){
+  if(state.busy)return;
+  closeEntryMenus();
+  state.migrating=item;
+  state.migrationId=crypto.randomUUID();
+  $('migrationDate').value=plusDays(taiwanToday(),1);
+  $('migrationOverlay').classList.add('show');
+  $('migrationDate').focus();
+}
+function closeMigrationDate(){
+  $('migrationOverlay').classList.remove('show');
+  state.migrating=null;
+}
+function menuTaskAction(item,operation){
+  closeEntryMenus();
+  const labels={COMPLETE:'完成',CANCEL:'取消',REOPEN:'恢復'};
+  if(operation==='CANCEL'&&!confirm('確定取消這項 Task？取消後不會再列為待辦。'))return;
+  action(async()=>{
+    await call('taskMenuAction',item.id,operation);
+    await load();
+    toast('任務已'+labels[operation]);
+  });
+}
+function deleteEntry(item, fromEditor = false){
+  if (!item || state.busy) return;
+  const type = {TASK:'Task', NOTE:'Note', EVENT:'Event'}[item.type] || '紀錄';
+  const remove = scope => action(async()=>{
+    await call('deleteEntry',item.id,scope);
+    if (fromEditor) closeEditor();
+    await load();
+    toast('已刪除');
+  });
+  if (!item.recurring) {
+    if (confirm('確定永久刪除這筆 '+type+'？此操作無法復原。')) remove('single');
+    return;
+  }
+  const dialog = $('deleteRepeatDialog');
+  $('deleteRepeatTitle').textContent = '刪除重複的 ' + type;
+  dialog.returnValue = '';
+  dialog.addEventListener('close',()=>{
+    const scope = dialog.returnValue;
+    if (scope === 'single' || scope === 'future') remove(scope);
+  },{once:true});
+  dialog.showModal();
+}
+
+$('deleteRepeatDialog').querySelectorAll('button').forEach(button=>{
+  button.onclick = () => $('deleteRepeatDialog').close(button.value);
+});
+
+function deleteFromMenu(item){
+  closeEntryMenus();
+  deleteEntry(item);
+}
+function createEntryMenu(item){
+  const wrap=el('div','entry-menu-wrap');
+  const trigger=el('button','entry-menu-trigger','⋯');
+  trigger.type='button';
+  trigger.title='更多操作';
+  trigger.setAttribute('aria-label','更多操作：'+(item.title||'筆記'));
+  trigger.setAttribute('aria-expanded','false');
+  wrap.append(trigger);
+  trigger.onclick=e=>{
+    e.stopPropagation();
+    const opened=entryMenuTrigger===trigger;
+    closeEntryMenus();
+    if(opened)return;
+    const popup=el('div','entry-menu-popup');
+    function choice(label,callback,disabled=false,danger=false){
+      const b=el('button',danger?'danger-option':'',label);
+      b.type='button';b.disabled=disabled;
+      b.onclick=event=>{event.stopPropagation();callback();};
+      popup.append(b);
+    }
+    if(item.type==='TASK'){
+      choice(item.status==='DONE'?'✓ Completed':'✓ Complete',()=>menuTaskAction(item,'COMPLETE'),item.status!=='OPEN');
+      choice('⊗ Cancel',()=>menuTaskAction(item,'CANCEL'),!['OPEN','DONE'].includes(item.status));
+      if(item.status==='DONE'||item.status==='CANCELLED'){
+        choice('↺ Reopen',()=>menuTaskAction(item,'REOPEN'));
+      }
+    }
+    if (item.type !== 'EVENT') choice('» Migrate',()=>showMigrationDate(item),item.status!=='OPEN');
+    choice('✎ Edit', () => {closeEntryMenus();openEditor(item);});
+    choice('▤ Delete',()=>deleteFromMenu(item),false,true);
+    entryMenuTrigger = trigger;
+    entryMenuPopup = popup;
+    document.body.append(popup);
+    positionEntryMenu(popup, trigger);
+    trigger.setAttribute('aria-expanded','true');
+    popup.querySelector('button:not(:disabled)')?.focus({preventScroll:true});
+  };
+  return wrap;
+}
+const photoDraft = { saved: [], added: [], removed: [] };
+
+function photoUrl(entryId, photoId) {
+  return '/api/note-photos/' + entryId + '/' + photoId;
+}
+
+function previewPhoto(url, label) {
+  const viewer = $('notePhotoViewer');
+  const image = $('notePhotoFull');
+  image.alt = label;
+  image.src = url;
+  viewer.showModal();
+}
+
+$('closeNotePhoto').onclick = () => $('notePhotoViewer').close();
+$('notePhotoViewer').addEventListener('close', () => $('notePhotoFull').removeAttribute('src'));
+
+function photoThumbnail(thumb, full, number) {
+  const button = el('button', 'note-photo-thumb');
+  button.type = 'button';
+  const label = '放大第 ' + number + ' 張照片';
+  button.setAttribute('aria-label', label);
+  const image = el('img');
+  image.src = thumb;
+  image.alt = '';
+  image.loading = 'lazy';
+  button.append(image);
+  button.onclick = (event) => {
+    event.stopPropagation();
+    previewPhoto(full, '圖片 ' + number);
+  };
+  return button;
+}
+
+function resetPhotoDraft(item) {
+  for (const photo of photoDraft.added) URL.revokeObjectURL(photo.preview);
+  photoDraft.saved = [...(item?.photos || [])];
+  photoDraft.added = [];
+  photoDraft.removed = [];
+  $('notePhotoFiles').value = '';
+  renderPhotoDraft();
+}
+
+function renderPhotoDraft() {
+  const root = $('notePhotoDraft');
+  root.replaceChildren();
+  const all = photoDraft.saved.map(id => {
+    const url = photoUrl(state.editing?.id, id);
+    return { id, thumb: url + '/thumb', full: url + '/full' };
+  }).concat(photoDraft.added.map(photo => ({...photo, thumb: photo.preview, full: photo.preview})));
+  all.forEach((photo, index) => {
+    const row = el('div', 'note-photo-draft');
+    const remove = el('button', 'note-photo-remove', '移除');
+    remove.type = 'button';
+    remove.setAttribute('aria-label', '移除第 ' + (index + 1) + ' 張照片');
+    remove.onclick = () => {
+      if (state.busy) return;
+      if (photo.preview) {
+        photoDraft.added = photoDraft.added.filter(item => item.id !== photo.id);
+        URL.revokeObjectURL(photo.preview);
+      } else {
+        photoDraft.saved = photoDraft.saved.filter(id => id !== photo.id);
+        photoDraft.removed.push(photo.id);
+      }
+      renderPhotoDraft();
+    };
+    row.append(photoThumbnail(photo.thumb, photo.full, index + 1), remove);
+    root.append(row);
+  });
+}
+
+const acceptedPhotos = ['image/jpeg','image/png','image/webp','image/gif'];
+
+function addPhotoFiles(files) {
+  if (!files.length || state.busy) return;
+  if (files.length + photoDraft.saved.length + photoDraft.added.length > 6) {
+    toast('每筆最多可存放 6 張圖片');
+    return;
+  }
+  if (files.some(file => !acceptedPhotos.includes(file.type) || !file.size || file.size > 18_000_000)) {
+    toast('請選擇 18 MB 以內的 JPG、PNG、WebP 或 GIF 圖片');
+    return;
+  }
+  for (const file of files) {
+    photoDraft.added.push({ id: crypto.randomUUID(), file, preview: URL.createObjectURL(file) });
+  }
+  renderPhotoDraft();
+}
+
+$('notePhotoFiles').onchange = event => {
+  const files = [...event.target.files];
+  event.target.value = '';
+  addPhotoFiles(files);
+};
+
+async function encodePhoto(image, edge, type, quality) {
+  const scale = Math.min(1, edge / Math.max(image.width, image.height));
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(image.width * scale));
+  canvas.height = Math.max(1, Math.round(image.height * scale));
+  const context = canvas.getContext('2d');
+  if (type === 'image/jpeg') {
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, type, quality));
+  if (!blob) throw new Error('無法處理這張圖片');
+  return blob;
+}
+
+async function preparePhotoDraft() {
+  for (const photo of photoDraft.added) {
+    if (photo.body) continue;
+    let image;
+    try {
+      const limit = 1_500_000;
+      const file = photo.file;
+      if (file.type === 'image/gif' && file.size > limit) throw new Error('GIF 請使用 1.5 MB 以內的檔案');
+      image = await createImageBitmap(file);
+      const type = file.type === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+      const keepOriginal = file.type !== 'image/jpeg' && file.size <= limit;
+      let full = keepOriginal ? file : await encodePhoto(image,1920,type,.83);
+      if (full.size > limit) full = await encodePhoto(image,type==='image/png'?640:1280,type,.65);
+      if (full.size > limit) full = await encodePhoto(image,512,type,.65);
+      let thumb = await encodePhoto(image,200,type,.72);
+      if (thumb.size > 100_000) thumb = await encodePhoto(image,128,type,.72);
+      if (full.size > limit || thumb.size > 100_000) throw new Error('檔案過大');
+      const body = new FormData();
+      body.append('full',full,'image.'+full.type.split('/')[1]);
+      body.append('thumb',thumb,'thumb.'+thumb.type.split('/')[1]);
+      photo.body = body;
+    } catch (error) {
+      const name = photo.file.name || '圖片';
+      throw new Error('無法處理「'+name+'」。'+(error.message === 'GIF 請使用 1.5 MB 以內的檔案' ? error.message : '請更換圖片後再試。'));
+    } finally {
+      image?.close();
+    }
+  }
+}
+
+async function saveNotePhotos(entryId) {
+  for (const id of photoDraft.removed) {
+    const response = await fetch(photoUrl(entryId, id), { method: 'DELETE' });
+    if (!response.ok || response.redirected) throw new Error('無法移除照片，請再試一次');
+  }
+  photoDraft.removed = [];
+  while (photoDraft.added.length) {
+    const photo = photoDraft.added[0];
+    const response = await fetch(photoUrl(entryId, photo.id), { method: 'PUT', body: photo.body });
+    if (!response.ok || response.redirected) throw new Error('照片上傳未完成，請再按一次儲存');
+    photoDraft.added.shift();
+    photoDraft.saved.push(photo.id);
+    URL.revokeObjectURL(photo.preview);
+    renderPhotoDraft();
+  }
+}
+
+function migrationLabels(item) {
+  const labels = [];
+  if (item.status === 'MIGRATED') labels.push(item.migratedTo ? '已遷移至 ' + item.migratedTo : '已遷移');
+  if (item.migratedFrom) labels.push('自 ' + item.migratedFrom + ' 遷移入');
+  return labels;
+}
+
+function makeEntry(item,compact){
+  const box=el('div',compact?'day-entry':'record');
+  if (item.status === 'DONE') box.classList.add('completed');
+  if (isLateTask(item)) box.classList.add('overdue-open');
+  const symbol=item.status==='MIGRATED'?'→':item.type==='NOTE'?'–':item.type==='EVENT'?'▣':
+    item.status==='CANCELLED'?'⊗':item.status==='SCHEDULED'?'‹':'•';
+  if(item.type==='TASK'&&['OPEN','DONE'].includes(item.status)){
+    box.append(taskMark(item,compact));
+  }else{
+    box.append(el('span','dot'+(item.important&&item.type!=='EVENT'?' priority':''),symbol));
+  }
+  if (item.phoneCalendar) {
+    const details = el('details', 'phone-event-details');
+    const summary = el('summary');
+    if (item.time) summary.append(el('span', 'phone-event-time', item.time));
+    summary.append(el('span', '', item.title));
+    const date = item.displayDate || item.assignedDate || item.period;
+    details.append(summary, el('div', 'record-meta phone-event-meta', date + ' · ' + item.phoneCalendar));
+    box.append(details);
+    return box;
+  }
+  const body=el('div',compact?'':'record-body');body.style.minWidth='0';
+  const name=(item.time ? item.time+'　' : '')+(item.title||item.content||'');
+  const title = el('div',compact?'entry-title':'record-title',(item.important?'★ ':'')+name);
+  body.append(title);
+  if(item.description)body.append(el('div',compact?'entry-description':'record-description',item.description));
+  if (item.photos?.length && ['Month','Year'].includes(state.view)) {
+    title.append(photoMarker(item.photos.length));
+  } else if (item.photos?.length) {
+    const photos = el('div', 'note-photos');
+    item.photos.forEach((photoId, index) => {
+      const url = photoUrl(item.id, photoId);
+      photos.append(photoThumbnail(url + '/thumb', url + '/full', index + 1));
+    });
+    body.append(photos);
+  }
+  const extra=[];
+  if(item.status==='DONE')extra.push('已完成');
+  if(item.status==='CANCELLED')extra.push('已取消');
+  if(item.status==='SCHEDULED')extra.push('已排程');
+  if (isOverdue(item)) {
+    const label = isLateTask(item) ? '已逾期' : '曾逾期';
+    extra.push(state.view === 'Week' ? label : label + ' · 原定 ' + (item.dueDate || item.displayDate));
+  }
+  if (item.precision === 'week' || item.precision === 'month') extra.push(planDateLabel(item));
+  if(tagsOf(item).length)extra.push(...tagsOf(item));
+  extra.push(...migrationLabels(item));
+  if(extra.length)body.append(el('div',compact?'entry-sub':'record-meta',extra.join('　')));
+  body.onclick=()=>openEditor(item);
+  box.append(body);
+  box.append(createEntryMenu(item));
+  return box;
+}
+
+function formatShortDate(value) {
+  const day = parse(value);
+  return (day.getUTCMonth() + 1) + '/' + day.getUTCDate();
+}
+
+function planWeekLabel(anchor) {
+  const start = periodOf(anchor, 'Week');
+  return formatShortDate(start) + '–' + formatShortDate(plusDays(start, 6));
+}
+
+function planDateLabel(item) {
+  const day = item.assignedDate || item.displayDate || item.period;
+  if (item.precision === 'month') return Number(day.slice(5, 7)) + ' 月';
+  if (item.precision === 'week') return planWeekLabel(day);
+  return day;
+}
+
+const scopeLabels = { Week: 'ALL WEEK', Month: 'ALL MONTH', Year: 'ALL YEAR' };
+const entryDate = item => item.displayDate || item.assignedDate || item.period;
+
+function entryScope(item) {
+  if (!scopeLabels[item.view]) return '';
+  return !item.assignedDate || ['week','month'].includes(item.precision) ? item.view : '';
+}
+
+function renderContent(provided) {
+  const items = provided || visibleItems();
+  closeEntryMenus();
+  const root = $('contentView');
+  root.replaceChildren();
+  const view = state.view;
+  const regular = [];
+  const scoped = [];
+  for (const item of items) {
+    const scope = entryScope(item);
+    if (view === 'Day' && scope) continue;
+    (scope === view ? scoped : regular).push(item);
+  }
+  if (scoped.length) {
+    const card = el('section', 'period-card');
+    card.append(el('h2', '', scopeLabels[view]));
+    scoped.forEach(item => card.append(makeEntry(item, false)));
+    root.append(card);
+  }
+  if (state.view === 'Day') renderDay(root, regular);
+  else if (state.view === 'Week') renderWeek(root, regular);
+  else if (state.view === 'Month') renderMonth(root, regular);
+  else renderYear(root, regular);
+}
+
+function photoMarker(count) {
+  const marker = el('span', 'note-photo-marker', '📷');
+  marker.setAttribute('role', 'img');
+  marker.setAttribute('aria-label', '含 ' + count + ' 張照片');
+  return marker;
+}
+
+// Month / Year 共用的極簡日期列
+function dateLine(date, items, options = {}) {
+  const d = parse(date);
+  const row = el('div', 'timeline-date-row' +
+    (date === taiwanToday() ? ' is-today' : '') + (items.length ? '' : ' is-empty') +
+    (options.weekEnd ? ' week-end' : ''));
+  row.append(el('span', 'timeline-date-number', String(d.getUTCDate())));
+  row.append(el('span', 'timeline-weekday', weekdays[d.getUTCDay()].slice(0, 1)));
+  const entries = el('div', 'timeline-entries');
+  items.forEach(item => {
+    const button = el('div', 'timeline-entry' +
+      (item.status === 'DONE' ? ' is-done' : '') +
+      (isLateTask(item) ? ' overdue-open' : ''));
+    let mark = item.type === 'NOTE' ? '–' : item.type === 'EVENT' ? '▣' : '•';
+    if (item.status === 'DONE') mark = 'V';
+    if (item.status === 'MIGRATED') mark = '→';
+    if (item.status === 'SCHEDULED') mark = '‹';
+    if (item.status === 'CANCELLED') mark = '⊗';
+    if (item.type === 'TASK' && ['OPEN','DONE'].includes(item.status)) {
+      const markHolder = el('span','timeline-mark');
+      const toggle = el('button','timeline-task-toggle' + (isOverdue(item) ? ' late' : ''),mark);
+      toggle.type = 'button';
+      toggle.title = '點擊切換任務狀態';
+      toggle.onclick = e => {e.stopPropagation();toggleTask(item);};
+      markHolder.append(toggle);
+      if (isOverdue(item) && item.status === 'DONE') markHolder.append(el('span','overdue-dot','●'));
+      button.append(markHolder);
+    } else {
+      button.append(el('span','timeline-dot' + (item.important && item.type !== 'EVENT' ? ' urgent' : ''), mark));
+    }
+    const scope = entryScope(item);
+    const legacyDate = ['week','month'].includes(item.precision) ? ' ' + planDateLabel(item) : '';
+    const title = (scope ? scopeLabels[scope] + legacyDate + ' · ' : '') +
+      (item.time ? item.time + ' ' : '') + (item.title || item.content || '未命名');
+    const edit = el(item.phoneCalendar ? 'span' : 'button', 'timeline-entry-name', (item.important ? '★ ' : '') + title);
+    if (item.phoneCalendar) {
+      edit.title = '手機行事曆 · ' + item.phoneCalendar;
+    } else {
+      edit.type = 'button';
+      edit.title = '編輯：' + title;
+      edit.onclick = () => openEditor(item);
+    }
+    if (item.photos?.length) {
+      edit.append(photoMarker(item.photos.length));
+    }
+    const migration = migrationLabels(item);
+    if (migration.length) {
+      const content = el('div', 'timeline-migration-content');
+      content.append(edit, el('div', 'record-meta', migration.join('　')));
+      button.append(content);
+    } else {
+      button.append(edit);
+    }
+    entries.append(button);
+  });
+  row.append(entries);
+  const add = el('button', 'timeline-add', '+');
+  add.title = '新增 ' + date + ' 的筆記';
+  add.setAttribute('aria-label', add.title);
+  add.onclick = () => openEditor(null, date);
+  row.append(add);
+  return row;
+}
+
+function renderMonth(root, items) {
+  const timeline = el('div', 'month-timeline');
+  const first = key();
+  const month = parse(first).getUTCMonth();
+  const year = parse(first).getUTCFullYear();
+  const n = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  for (let day = 1; day <= n; day++) {
+    const date = first.slice(0, 8) + pad(day);
+    timeline.append(dateLine(date, items.filter(item => entryDate(item) === date),
+      {weekEnd: parse(date).getUTCDay() === 6}));
+  }
+  root.append(timeline);
+}
+
+function renderYear(root, items) {
+  const timeline = el('div', 'year-timeline');
+  const byDate = new Map();
+  for (const item of items) {
+    const date = entryDate(item);
+    if (!byDate.has(date)) byDate.set(date, []);
+    byDate.get(date).push(item);
+  }
+
+  const today = taiwanToday();
+  if (periodOf(today, 'Year') === key() && !byDate.has(today)) byDate.set(today, []);
+  if (!byDate.size) byDate.set(key(), []);
+  const monthNames = new Intl.DateTimeFormat('en-US', {month: 'long', timeZone: 'UTC'});
+  let monthSection;
+  let lastMonth = '';
+  for (const date of [...byDate.keys()].sort()) {
+    const month = date.slice(0, 7);
+    if (month !== lastMonth) {
+      monthSection = el('section', 'year-month');
+      monthSection.append(el('h2', 'year-month-title', monthNames.format(parse(date)).toUpperCase()));
+      timeline.append(monthSection);
+      lastMonth = month;
+    }
+    monthSection.append(dateLine(date, byDate.get(date)));
+  }
+  root.append(timeline);
+}
+
+function renderWeek(root, items) {
+  const days = el('div', 'days');
+  const today = taiwanToday();
+  for (let i = 0; i < 7; i++) {
+    const date = plusDays(key(), i);
+    const dayItems = items.filter(item => entryDate(item) === date);
+    const row = el('div', 'day-row' + (dayItems.length ? '' : ' is-empty'));
+    const dateButton = el('button', 'daydate' + (today === date ? ' today' : ''));
+    dateButton.append(el('span', '', weekdays[i]), el('strong', '', String(parse(date).getUTCDate())));
+    dateButton.title = date + '：新增筆記';
+    dateButton.onclick = () => openEditor(null, date);
+    const content = el('div', 'day-content');
+    dayItems.forEach(item => content.append(makeEntry(item, true)));
+    const add = el('button', 'row-add', '+');
+    add.title = '新增 ' + date + ' 的筆記';
+    add.setAttribute('aria-label', add.title);
+    add.onclick = () => openEditor(null, date);
+    row.append(dateButton, content, add);
+    days.append(row);
+  }
+  root.append(days);
+}
+// Day 使用與 Week 相同的「＋ 開啟新增視窗」操作，不直接顯示輸入框。
+// 每個分類都有專屬的 ＋，預設選擇對應的 Task、Note 或 Event。
+function renderDay(root,items){
+  const shell=el('div','day-view');
+  // 日期已於頁面上方顯示，此處不再重複呈現。
+  const groups=[['TASK','•','TASKS','待辦任務'],['EVENT','▣','EVENTS','事件'],['NOTE','–','NOTES','筆記']];
+  groups.forEach(([type,symbol,title,label])=>{
+    const section=el('section','day-section');
+    const head=el('div','day-section-head');
+    head.append(el('h2','',`${symbol} ${title}`));
+    const plus=el('button','row-add day-section-plus','+');
+    plus.title=`新增${label}`;
+    plus.setAttribute('aria-label',plus.title);
+    plus.onclick=()=>openEditor(null,undefined,type);
+    head.append(plus);
+    section.append(head);
+    const groupItems=items.filter(x=>x.type===type);
+    if (type === 'TASK') {
+      const today = taiwanToday();
+      groupItems.sort((a,b) => Number(isLateTask(b,today)) - Number(isLateTask(a,today)));
+    }
+    if(groupItems.length){groupItems.forEach(x=>section.append(makeEntry(x,false)));}
+    else section.classList.add('is-empty');
+    shell.append(section);
+  });
+  root.append(shell);
+}
+function fillPlanWeekOptions(value) {
+  const start = periodOf(value, 'Month');
+  const end = shiftPeriod(start, 'Month', 1);
+  const field = $('planWeek');
+  field.replaceChildren();
+  for (let sunday = periodOf(start, 'Week'); sunday < end; sunday = plusDays(sunday, 7)) {
+    const anchor = sunday < start ? start : sunday;
+    field.append(new Option(planWeekLabel(anchor), anchor));
+  }
+  const sunday = periodOf(value, 'Week');
+  field.value = sunday < start ? start : sunday;
+}
+
+const pickerMonth = new Intl.DateTimeFormat('en-US', {month:'short', timeZone:'UTC'});
+const pickerMonthYear = new Intl.DateTimeFormat('en-US', {month:'long',year:'numeric',timeZone:'UTC'});
+const pickerTitles = {Week:'選擇週',Month:'選擇月份',Year:'選擇年份'};
+let periodPickerState;
+
+function openPeriodPicker(view, date, onConfirm) {
+  if (state.busy || $('periodPicker').open) return;
+  periodPickerState = {view, date, selected:periodOf(date, view), onConfirm};
+  $('periodPickerTitle').textContent = pickerTitles[view] + ' · ' + scopeLabels[view];
+  renderPeriodPicker();
+  $('periodPicker').showModal();
+}
+
+function shiftPickerDate(step) {
+  const {view, date} = periodPickerState;
+  return shiftPeriod(date, view === 'Week' ? 'Month' : 'Year', step * (view === 'Year' ? 12 : 1));
+}
+
+function renderPeriodPicker(refocus = false) {
+  const picker = periodPickerState;
+  const {view, date} = picker;
+  const grid = $('pickerGrid');
+  grid.replaceChildren();
+  grid.classList.toggle('is-week', view === 'Week');
+  const year = Number(date.slice(0, 4));
+  const block = Math.floor((year - 1000) / 12) * 12 + 1000;
+  $('pickerHeading').textContent = view === 'Week' ? pickerMonthYear.format(parse(date))
+    : view === 'Month' ? String(year) : block + '–' + Math.min(block + 11, 9998);
+  $('pickerPrev').disabled = shiftPickerDate(-1) < '1000-01-01';
+  const next = shiftPickerDate(1);
+  $('pickerNext').disabled = next.length !== 10 || next > '9998-12-31';
+
+  function choice(value, label, cells) {
+    const button = el('button', 'period-choice' + (cells ? ' period-week-row' : ''), cells ? '' : label);
+    button.type = 'button';
+    button.setAttribute('aria-pressed', String(picker.selected === value));
+    if (cells) {
+      button.setAttribute('aria-label', label);
+      for (const day of cells) button.append(el('span', day.slice(0,7) === date.slice(0,7) ? '' : 'outside-month',
+        String(Number(day.slice(8,10)))));
+    }
+    button.disabled = value < '1000-01-01' || value > '9998-12-31';
+    button.onclick = () => {picker.selected = value;renderPeriodPicker(true);};
+    grid.append(button);
+  }
+
+  if (view === 'Week') {
+    const weekdaysRow = el('div', 'period-week-row period-week-heading');
+    weekdaysRow.setAttribute('aria-hidden', 'true');
+    weekdays.forEach(day => weekdaysRow.append(el('span', '', day[0])));
+    grid.append(weekdaysRow);
+    const start = periodOf(date, 'Month');
+    const end = shiftPeriod(start, 'Month', 1);
+    for (let sunday = periodOf(start, 'Week'); sunday < end; sunday = plusDays(sunday, 7)) {
+      const days = Array.from({length:7}, (_, i) => plusDays(sunday, i));
+      choice(sunday, sunday + ' ～ ' + days[6], days);
+    }
+  } else if (view === 'Month') {
+    for (let month = 1; month <= 12; month++) {
+      const value = year + '-' + pad(month) + '-01';
+      choice(value, pickerMonth.format(parse(value)));
+    }
+  } else {
+    for (let value = block; value <= Math.min(block + 11, 9998); value++) {
+      choice(value + '-01-01', String(value));
+    }
+  }
+  if (refocus) grid.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
+}
+
+for (const [id, step] of [['pickerPrev',-1],['pickerNext',1]]) {
+  $(id).onclick = () => {
+    periodPickerState.date = shiftPickerDate(step);
+    renderPeriodPicker();
+    if ($(id).disabled) $(step === -1 ? 'pickerNext' : 'pickerPrev').focus();
+  };
+}
+$('pickerCancel').onclick = () => $('periodPicker').close();
+$('pickerConfirm').onclick = () => {
+  const {selected, onConfirm} = periodPickerState;
+  $('periodPicker').close();
+  onConfirm(selected);
+};
+
+const editorPanels = {
+  editorDatePanel:'scopeSelection', editorExactDatePanel:'editorExactDate',
+  notePhotoField:'editorPhotos', editorTagPanel:'editorTags', editorRepeatPanel:'editorRepeat'
+};
+
+function showEditorPanel(panel = '') {
+  const choosingDate = panel === 'editorDatePanel' || panel === 'editorExactDatePanel';
+  $('eventTimeField').hidden = !choosingDate || $('type').value !== 'EVENT';
+  for (const [id, trigger] of Object.entries(editorPanels)) {
+    $(id).hidden = id !== panel;
+    if (id !== 'editorDatePanel' || !state.periodEditor) {
+      $(trigger).setAttribute('aria-expanded', String(id === panel));
+    }
+  }
+}
+
+for (const [id, trigger] of Object.entries(editorPanels)) {
+  $(trigger).onclick = () => {
+    if (state.busy) return;
+    if (id === 'editorDatePanel' && state.periodEditor) {
+      openPeriodPicker(state.periodEditor, state.editorScopeDate, setEditorScope);
+      return;
+    }
+    showEditorPanel($(id).hidden ? id : '');
+  };
+}
+
+function updateEditorDateLabel() {
+  const precision = state.editing?.precision || 'date';
+  const date = editorDate(precision);
+  const view = state.periodEditor;
+  let label = date || '選擇日期';
+  if (date && view === 'Week') {
+    label = formatShortDate(date) + '–' + formatShortDate(plusDays(date, 6)) + ' · ALL WEEK';
+  } else if (date && view === 'Month') {
+    label = pickerMonthYear.format(parse(date)) + ' · ALL MONTH';
+  } else if (date && view === 'Year') {
+    label = date.slice(0, 4) + ' · ALL YEAR';
+  } else if (date && precision === 'month') {
+    label = pickerMonthYear.format(parse(date));
+  } else if (date && precision === 'week') {
+    label = planWeekLabel(date);
+  }
+  if (view && $('scopedDate').value) label = $('scopedDate').value;
+  $('editorDateLabel').textContent = label;
+}
+
+function setEditorScope(selected) {
+  const view = state.periodEditor;
+  state.editorScopeDate = periodOf(selected, view);
+  const input = $('scopedDate');
+  input.min = state.editorScopeDate;
+  input.max = plusDays(shiftPeriod(state.editorScopeDate, view, 1), -1);
+  if (input.value && !input.validity.valid) input.value = '';
+  updateEditorDateLabel();
+}
+for (const id of ['normalDate','planMonth','planWeek','scopedDate']) $(id).onchange = updateEditorDateLabel;
+
+function setupEntryDate(item, selected) {
+  const whole = state.periodEditor;
+  const precision = item?.precision || 'date';
+  $('editorExactDate').hidden = !whole;
+  $('scopedDate').value = '';
+  $('normalDateField').hidden = Boolean(whole || precision !== 'date');
+  $('planMonthField').hidden = precision !== 'month';
+  $('planWeekField').hidden = precision !== 'week';
+  $('normalDate').value = selected;
+  $('planMonth').value = selected.slice(0, 7);
+  if (precision === 'week') fillPlanWeekOptions(selected);
+  const button = $('scopeSelection');
+  if (whole) {
+    button.removeAttribute('aria-expanded');
+    button.setAttribute('aria-haspopup', 'dialog');
+    button.setAttribute('aria-controls', 'periodPicker');
+    setEditorScope(selected);
+  } else {
+    button.removeAttribute('aria-haspopup');
+    button.setAttribute('aria-controls', 'editorDatePanel');
+    updateEditorDateLabel();
+  }
+}
+
+function editorDate(precision) {
+  if (state.periodEditor) return state.editorScopeDate;
+  const month = $('planMonth').value;
+  switch (precision) {
+    case 'month': return /^\d{4}-\d{2}$/.test(month) ? month + '-01' : '';
+    case 'week': return $('planWeek').value;
+    default: return $('normalDate').value;
+  }
+}
+
+function setEditorImportant(value) {
+  $('important').checked = value;
+  $('editorImportant').setAttribute('aria-pressed', String(value));
+}
+$('editorImportant').onclick = () => {if (!state.busy) setEditorImportant(!$('important').checked);};
+
+const repeatUnits = {day:'天',week:'週',month:'個月',year:'年'};
+
+function updateRepeatControls() {
+  const unit = $('repeatUnit').value;
+  const interval = $('repeatInterval').value;
+  const count = $('repeatEnding').value === 'count';
+  $('repeatOptions').hidden = !unit;
+  $('repeatCountField').hidden = !count;
+  $('repeatUntilField').hidden = count;
+  $('repeatIntervalLabel').textContent = '重複間隔（' + (repeatUnits[unit] || '') + '）';
+  $('repeatLabel').textContent = unit ? '每 '+(interval || '1')+' '+repeatUnits[unit] : '不重複';
+}
+$('repeatInterval').oninput = updateRepeatControls;
+$('repeatUnit').onchange = $('repeatEnding').onchange = updateRepeatControls;
+
+function resetRepeatControls() {
+  $('repeatUnit').value = '';
+  $('repeatInterval').value = '1';
+  $('repeatEnding').value = 'count';
+  $('repeatCount').value = '2';
+  $('repeatUntil').value = '';
+  updateRepeatControls();
+}
+
+function readRepeatRule(chosen) {
+  const unit = $('repeatUnit').value;
+  if (!unit || $('editorRepeat').hidden) return null;
+  if (!chosen) {
+    showEditorPanel('editorExactDatePanel');
+    $('scopedDate').focus();
+    throw new Error('請先為重複項目指定開始日期');
+  }
+  const interval = $('repeatInterval');
+  const byCount = $('repeatEnding').value === 'count';
+  const end = $(byCount ? 'repeatCount' : 'repeatUntil');
+  if (!byCount) end.min = chosen;
+  for (const input of [interval,end]) {
+    if (!input.value || !input.validity.valid) {
+      showEditorPanel('editorRepeatPanel');
+      input.focus();
+      throw new Error(input === interval ? '重複間隔須為 1～365' :
+        byCount ? '次數須為 2～1,000 次（含首次）' : '請選擇不早於開始日期的截止日期');
+    }
+  }
+  return {unit, interval:interval.valueAsNumber, ...(byCount ? {count:end.valueAsNumber} : {until:end.value})};
+}
+
+function chooseType(type) {
+  $('type').value = type;
+  $('editorRepeat').hidden = Boolean(state.editing) || type === 'NOTE';
+  if ($('editorRepeat').hidden && !$('editorRepeatPanel').hidden) showEditorPanel();
+  $('eventTimeField').hidden = type !== 'EVENT' ||
+    ($('editorDatePanel').hidden && $('editorExactDatePanel').hidden);
+  document.querySelectorAll('#typeTabs button').forEach(button => {
+    const selected = button.dataset.type === type;
+    button.classList.toggle('selected', selected);
+    button.setAttribute('aria-pressed', String(selected));
+  });
+}
+
+function openEditor(item, selectedDate, presetType, wholePeriod = '') {
+ if(state.busy)return;
+ state.editing=item||null;
+ state.newId=item?null:crypto.randomUUID();
+ resetPhotoDraft(item);
+ resetRepeatControls();
+ state.periodEditor = item && !item.assignedDate ? entryScope(item) : wholePeriod;
+ state.editorView = item?.view || state.periodEditor || 'Day';
+ const label = state.periodEditor && scopeLabels[state.periodEditor];
+ $('modalTitle').textContent = (item ? '編輯' : '新增') + (label ? ' ' + label : item ? '筆記' : ' Task / Note / Event');
+ chooseType(item ? item.type : (presetType || 'TASK'));
+ document.querySelectorAll('#typeTabs button').forEach(b => b.disabled = Boolean(item));
+ setupEntryDate(item, selectedDate || (item ? entryDate(item) : state.date));
+ showEditorPanel();
+ $('entryTitle').value=item?(item.title||item.content):'';
+ $('entryText').value=item?(item.description||''):'';
+ setEditorImportant(Boolean(item?.important));
+ $('eventTime').value=item?(item.time||''):'';
+ $('tagInput').value=item?(item.tags||[]).join(', '):'';
+ renderTagChoices();
+ $('delete').style.display=item?'inline-block':'none';
+ $('migrate').style.display=item&&['TASK','NOTE'].includes(item.type)&&item.status==='OPEN'?'inline-block':'none';
+ $('overlay').classList.add('show');
+ $('close').focus({preventScroll:true});
+}
+function closeEditor(){$('overlay').classList.remove('show');state.editing=null;resetPhotoDraft();}
+document.querySelectorAll('#typeTabs button').forEach(b=>b.onclick=()=>{if(!state.busy)chooseType(b.dataset.type);});
+$('close').onclick=$('cancel').onclick=()=>{if(!state.busy)closeEditor();};
+$('overlay').onclick=e=>{if(!state.busy&&e.target===$('overlay'))closeEditor();};
+$('save').onclick=()=>action(async()=>{
+ const type=$('type').value;
+ const title=$('entryTitle').value.trim()||(type==='NOTE'&&photoDraft.added.length?'照片筆記':'');
+ const description=$('entryText').value.trim();
+ if(!title||title.length>160){toast('請填寫 1～160 字的 Title');$('entryTitle').focus();return;}
+ const precision = state.editing?.precision || 'date';
+ const view = state.editorView;
+ const whole = state.periodEditor;
+ const exactDate = $('scopedDate');
+ if (whole && !exactDate.validity.valid) {
+   toast('請選擇這段期間內的日期');
+   showEditorPanel('editorExactDatePanel');
+   exactDate.focus();
+   return;
+ }
+ const selected = (whole && exactDate.value) || editorDate(precision);
+ if (!selected) {toast('請選擇有效的日期或期間');showEditorPanel('editorDatePanel');$('scopeSelection').focus();return;}
+ const targetPeriod = periodOf(selected, view);
+ const chosen = whole ? exactDate.value : selected;
+ const time = type === 'EVENT' || view !== 'Day' ? $('eventTime').value : '';
+ const tags=splitTags($('tagInput').value);
+ const recurrence = state.editing ? null : readRepeatRule(chosen);
+ await preparePhotoDraft();
+ if(state.editing){
+   await call('updateEntry',state.editing.id,{title,description,important:$('important').checked,assignedDate:chosen,time,tags,precision,period:targetPeriod});
+ }else{
+   await call('appendEntry',view,targetPeriod,type,title,description,$('important').checked,chosen,time,tags,state.newId,precision,recurrence);
+   if (photoDraft.added.length) {
+     state.editing={id:state.newId,view,period:targetPeriod,assignedDate:chosen,displayDate:chosen||targetPeriod,type,precision,recurring:Boolean(recurrence)};
+     $('editorRepeat').hidden = true;
+     if (!$('editorRepeatPanel').hidden) showEditorPanel();
+     $('entryTitle').value=title;
+     document.querySelectorAll('#typeTabs button').forEach(button=>button.disabled=true);
+   }
+ }
+ if (state.editing) await saveNotePhotos(state.editing.id);
+ closeEditor();
+ const currentPeriod = periodOf(state.date, whole || state.view);
+ if (periodOf(selected, whole || state.view) !== currentPeriod) {
+   state.date = chosen || targetPeriod;
+   window.scrollTo(0, 0);
+ }
+ toast('已儲存');await load();
+});
+$('delete').onclick=()=>deleteEntry(state.editing,true);
+$('migrate').onclick=()=>{if(state.editing)showMigrationDate(state.editing);};
+$('settingsTab').onclick = () => showSettings(true);
+document.querySelectorAll('#nav [data-view]').forEach(button => {
+  button.onclick = () => {
+    if (state.settings) showSettings(false);
+    if (state.view === button.dataset.view) return;
+    state.view = button.dataset.view;
+    state.tag = '';
+    state.search = '';
+    load();
+  };
+});
+$('prev').onclick=()=>{state.date=shiftPeriod(state.date,state.view,-1);state.tag='';state.search='';load();};
+$('next').onclick=()=>{state.date=shiftPeriod(state.date,state.view,1);state.tag='';state.search='';load();};
+$('today').onclick=()=>{state.date=taiwanToday();state.tag='';state.search='';load();};
+$('add').onclick = () => {
+  if (scopeLabels[state.view]) openEditor(null, state.date, undefined, state.view);
+};
+
+// 日期遷移表單：允許選擇任何有效日期
+$('migrationCancel').onclick=closeMigrationDate;
+$('migrationOverlay').onclick=e=>{
+  if(e.target===$('migrationOverlay'))closeMigrationDate();
+};
+$('migrationConfirm').onclick=()=>{
+  const item=state.migrating, date=$('migrationDate').value;
+  if(!item||!date){toast('請選擇遷移日期');return;}
+  if(date===(item.displayDate||item.assignedDate||item.period)){
+    toast('請選擇不同的日期');return;
+  }
+  action(async()=>{
+    await call('migrateEntryToDate',item.id,date,state.migrationId);
+    closeMigrationDate();
+    closeEditor();
+    await load();
+    toast('已遷移至 '+date);
+  });
+};
+document.addEventListener('click',event=>{
+  if(!event.target.closest('.entry-menu-wrap,.entry-menu-popup'))closeEntryMenus();
+});
+window.addEventListener('resize', closeEntryMenus);
+document.addEventListener('scroll', event => {
+  if (entryMenuPopup && !entryMenuPopup.contains(event.target)) closeEntryMenus();
+}, true);
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape' && !$('periodPicker').open && !$('deleteRepeatDialog').open){
+    const trigger = entryMenuTrigger;
+    closeEntryMenus();
+    trigger?.focus({preventScroll:true});
+    if(state.busy)return;
+    if($('migrationOverlay').classList.contains('show'))closeMigrationDate();
+    else if($('overlay').classList.contains('show'))closeEditor();
+  }
+});
+
+function refreshOnNewDay() {
+  const today = taiwanToday();
+  if (today === lastSeenToday || state.busy ||
+      $('overlay').classList.contains('show') ||
+      $('migrationOverlay').classList.contains('show')) return;
+  if (state.date === lastSeenToday) state.date = today;
+  lastSeenToday = today;
+  load();
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) refreshOnNewDay();
+});
+document.addEventListener('phone-calendar-updated', load);
+setInterval(refreshOnNewDay, 15000);
+load();
+
+</script>
+<script type="module" src="/phone-calendar.mjs"></script>
+<script type="module" src="/pwa/install.mjs"></script>
+</body>
+</html>

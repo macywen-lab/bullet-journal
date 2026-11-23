@@ -1,0 +1,1 @@
+ALTER TABLE entries ADD COLUMN completed_on TEXT NOT NULL DEFAULT '';
